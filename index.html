@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Math Flashcards</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MathCards">
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/180/4f46e5/ffffff?text=Math">
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            asciimath2jax: { delimiters: [['`','`']], preview: "none" },
+            "HTML-CSS": { linebreaks: { automatic: true, width: "container" }, imageFont: null },
+            displayAlign: "center", messageStyle: "none"
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=AM_CHTML"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            /* iOS Safe Areas for Notch and Home Indicator */
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+            -webkit-user-select: none; /* Prevents long-press text selection */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .flip-card {
+            perspective: 1000px;
+            width: 90vw; max-width: 400px;
+            height: 60vh; max-height: 550px;
+            margin: 0 auto;
+        }
+        .flip-card-inner {
+            position: relative; width: 100%; height: 100%;
+            transition: transform 0.6s; transform-style: preserve-3d;
+        }
+        .flip-card-inner.flipped { transform: rotateY(180deg); }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border: 3px solid #e5e7eb;
+            border-radius: 1.5rem; padding: 1.5rem;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            font-size: clamp(1rem, 5vw, 1.5rem); 
+            box-sizing: border-box;
+            word-break: break-word;
+        }
+        .flip-card-front { background: white; }
+        .flip-card-back { background: #f8fafc; transform: rotateY(180deg); }
+
+        .card-checkbox-overlay {
+            position: absolute; top: 1.25rem; right: 1.25rem; z-index: 50; 
+            width: 28px; height: 28px; cursor: pointer; accent-color: #4f46e5;
+        }
+
+        /* Rectangular Nav Zone: Hidden on hover, subtle visible on touch mobile */
+        .nav-zone {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: calc(60vh / 8); 
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 60;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            background: rgba(79, 70, 229, 0.9);
+            color: white;
+            border-radius: 8px;
+            font-size: 20px;
+        }
+        
+        /* Reveal zones on hover (Desktop) */
+        @media (hover: hover) {
+            .nav-zone:hover:not(.disabled) { opacity: 1; }
+        }
+
+        /* Always show slightly on Mobile since hover doesn't exist */
+        @media (hover: none) {
+            .nav-zone { opacity: 0.2; width: 40px; }
+            .nav-zone:active { opacity: 0.8; }
+        }
+
+        .nav-zone.left { left: -60px; }
+        .nav-zone.right { right: -60px; }
+
+        @media (max-width: 640px) {
+            .nav-zone.left { left: 5px; }
+            .nav-zone.right { right: 5px; }
+        }
+
+        .nav-zone.disabled { pointer-events: none; visibility: hidden; }
+        .card-checkbox { width: 22px; height: 22px; cursor: pointer; accent-color: #4f46e5; }
+        .MathJax_Display { display: inline !important; margin: 0 !important; }
+        ::-webkit-scrollbar { display: none; }
+
+        .icon-btn {
+            width: 44px; /* Slightly larger for easier finger tapping */
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-900 overflow-x-hidden">
+    <div id="app" class="p-4 md:p-8">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold text-slate-800 mb-6 text-center">Flashcards</h1>
+            <div id="content"></div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'math_flashcards_v9';
+        let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
+            id: Date.now(),
+            name: "Mathematics Study",
+            cards: [
+                { id: 1, question: "`(A+B)^2`", answer: "`A^2 + 2AB + B^2`", checked: true },
+                { id: 2, question: "What is `int x^2 dx`?", answer: "`1/3 x^3 + C`", checked: false }
+            ]
+        }];
+
+        function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(sets)); }
+
+        let currentSet = null;
+        let studyMode = false;
+        let currentCardIndex = 0;
+        let isFlipped = false;
+        let activeStudyCards = [];
+        let editingCardId = null;
+
+        function render() {
+            const content = document.getElementById('content');
+            const title = document.querySelector('h1');
+            if (studyMode) { content.innerHTML = renderStudyMode(); title.classList.add('hidden'); }
+            else if (!currentSet) { content.innerHTML = renderSetsList(); title.classList.remove('hidden'); }
+            else { content.innerHTML = renderSetEditor(); title.classList.remove('hidden'); }
+            setTimeout(() => { if (window.MathJax) MathJax.Hub.Queue(['Typeset', MathJax.Hub, content]); }, 50);
+        }
+
+        function renderSetsList() {
+            let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">';
+            sets.forEach(set => {
+                html += `<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold mb-1">${escapeHtml(set.name)}</h3>
+                    <p class="text-slate-500 mb-4">${set.cards.length} cards</p>
+                    <button onclick="openSet(${set.id})" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold">Open Set</button>
+                </div>`;
+            });
+            html += `<button onclick="createNewSet()" class="border-2 border-dashed border-slate-300 p-6 rounded-2xl text-slate-400 font-bold">+ New Set</button></div>`;
+            return html;
+        }
+
+        function renderSetEditor() {
+            const starredCount = currentSet.cards.filter(c => c.checked).length;
+            const allChecked = starredCount === currentSet.cards.length && currentSet.cards.length > 0;
+            let html = `<div class="flex flex-col gap-4 mb-6">
+                <div class="flex items-center justify-between">
+                    <button onclick="backToSets()" class="text-indigo-600 font-bold p-2">← All Sets</button>
+                    <div class="flex gap-2">
+                        <button onclick="startStudy(false)" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-full text-sm font-bold">Study All</button>
+                        <button onclick="startStudy(true)" ${starredCount === 0 ? 'disabled' : ''} class="px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-bold shadow-lg disabled:opacity-30">Checked (${starredCount})</button>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button onclick="toggleAllCards()" class="text-xs font-bold text-slate-400 uppercase tracking-wider">${allChecked ? 'Uncheck All' : 'Check All'}</button>
+                </div>
+            </div>
+            <div class="bg-indigo-50 p-6 rounded-2xl mb-8 border border-indigo-100">
+                <h3 class="font-bold text-indigo-900 mb-4 text-sm uppercase">Add New Card</h3>
+                <div class="space-y-3">
+                    <input id="newQ" type="text" placeholder="Question" class="w-full p-3 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input id="newA" type="text" placeholder="Answer" class="w-full p-3 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button onclick="addNewCard()" class="w-full py-3 bg-slate-800 text-white rounded-xl font-bold">Add to Set</button>
+                </div>
+            </div>
+            <div class="space-y-3 pb-20">`;
+            currentSet.cards.forEach((card, i) => {
+                if (editingCardId === card.id) {
+                    html += `<div class="bg-indigo-50 p-4 rounded-xl border-2 border-indigo-200 space-y-3">
+                        <input id="editQ-${card.id}" type="text" value="${escapeHtml(card.question)}" class="w-full p-2 rounded-lg">
+                        <input id="editA-${card.id}" type="text" value="${escapeHtml(card.answer)}" class="w-full p-2 rounded-lg">
+                        <div class="flex gap-2"><button onclick="saveEdit(${card.id})" class="flex-1 py-3 bg-indigo-600 text-white rounded-lg font-bold">Save</button>
+                        <button onclick="cancelEdit()" class="flex-1 py-3 bg-slate-300 text-slate-700 rounded-lg font-bold">Cancel</button></div></div>`;
+                } else {
+                    html += `<div class="bg-white p-4 rounded-xl border border-slate-200 flex justify-between items-start">
+                        <div class="flex-1 pr-4">
+                            <div class="text-xs font-bold text-slate-400 uppercase mb-1">Card ${i+1}</div>
+                            <div class="text-slate-800 font-medium">${card.question}</div>
+                            <div class="text-indigo-600 text-sm mt-1">${card.answer}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button onclick="startEdit(${card.id})" class="text-slate-400 p-1">✎</button>
+                            <input type="checkbox" class="card-checkbox" ${card.checked ? 'checked' : ''} onchange="toggleCheck(${i})">
+                            <button onclick="deleteCard(${i})" class="text-slate-300 p-1 text-2xl">&times;</button>
+                        </div></div>`;
+                }
+            });
+            return html + '</div>';
+        }
+
+        function renderStudyMode() {
+            const card = activeStudyCards[currentCardIndex];
+            const masterIndex = currentSet.cards.findIndex(c => c.id === card.id);
+            const isChecked = currentSet.cards[masterIndex].checked;
+
+            return `
+                <div class="w-full max-w-xl mx-auto flex flex-col min-h-[85vh] relative">
+                    <div class="flex justify-center mb-6">
+                        <div class="px-3 py-1 bg-slate-200 rounded-full text-xs font-bold text-slate-600">${currentCardIndex + 1} / ${activeStudyCards.length}</div>
+                    </div>
+                    <div class="relative flex-1 flex flex-col items-center justify-center">
+                        <div class="w-[90vw] max-w-[400px] flex justify-between mb-4 px-1">
+                            <button onclick="shuffleCards()" class="icon-btn">↺</button>
+                            <button onclick="exitStudy()" class="icon-btn">✕</button>
+                        </div>
+                        <div class="relative">
+                            <div class="nav-zone left ${currentCardIndex === 0 ? 'disabled' : ''}" onclick="prevCard()">←</div>
+                            <div class="relative">
+                                <input type="checkbox" class="card-checkbox-overlay" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); syncCheck(${masterIndex})">
+                                <div onclick="flipCard()" class="flip-card cursor-pointer">
+                                    <div class="flip-card-inner ${isFlipped ? 'flipped' : ''}">
+                                        <div class="flip-card-front"><div>${card.question}</div></div>
+                                        <div class="flip-card-back"><div>${card.answer}</div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="nav-zone right ${currentCardIndex === activeStudyCards.length - 1 ? 'disabled' : ''}" onclick="nextCard()">→</div>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        // --- HANDLERS ---
+        function startEdit(id) { editingCardId = id; render(); }
+        function cancelEdit() { editingCardId = null; render(); }
+        function saveEdit(id) {
+            const card = currentSet.cards.find(c => c.id === id);
+            card.question = document.getElementById(`editQ-${id}`).value;
+            card.answer = document.getElementById(`editA-${id}`).value;
+            editingCardId = null; saveData(); render();
+        }
+        function toggleCheck(index) { currentSet.cards[index].checked = !currentSet.cards[index].checked; saveData(); render(); }
+        function toggleAllCards() {
+            const anyUnchecked = currentSet.cards.some(c => !c.checked);
+            currentSet.cards.forEach(c => c.checked = anyUnchecked);
+            saveData(); render();
+        }
+        function syncCheck(masterIndex) { currentSet.cards[masterIndex].checked = !currentSet.cards[masterIndex].checked; saveData(); }
+        function startStudy(onlyChecked) {
+            activeStudyCards = onlyChecked ? currentSet.cards.filter(c => c.checked) : [...currentSet.cards];
+            if (activeStudyCards.length === 0) return;
+            studyMode = true; currentCardIndex = 0; isFlipped = false; render();
+        }
+        function addNewCard() {
+            const q = document.getElementById('newQ').value;
+            const a = document.getElementById('newA').value;
+            if (q && a) { currentSet.cards.push({ id: Date.now(), question: q, answer: a, checked: false }); saveData(); render(); }
+        }
+        function deleteCard(index) { if(confirm("Delete card?")) { currentSet.cards.splice(index, 1); saveData(); render(); } }
+        function createNewSet() {
+            const name = prompt("Set name:");
+            if (name) { sets.push({ id: Date.now(), name: name, cards: [] }); saveData(); render(); }
+        }
+        function flipCard() {
+            isFlipped = !isFlipped;
+            const inner = document.querySelector('.flip-card-inner');
+            if (inner) {
+                inner.classList.toggle('flipped', isFlipped);
+                setTimeout(() => { if (window.MathJax) MathJax.Hub.Queue(['Typeset', MathJax.Hub, inner]); }, 100);
+            }
+        }
+        function nextCard() { if (currentCardIndex < activeStudyCards.length - 1) { currentCardIndex++; isFlipped = false; render(); } }
+        function prevCard() { if (currentCardIndex > 0) { currentCardIndex--; isFlipped = false; render(); } }
+        function openSet(id) { currentSet = sets.find(s => s.id === id); render(); }
+        function backToSets() { currentSet = null; studyMode = false; render(); }
+        function exitStudy() { studyMode = false; render(); }
+        function shuffleCards() { activeStudyCards.sort(() => Math.random() - 0.5); currentCardIndex = 0; isFlipped = false; render(); }
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        render();
+    </script>
+</body>
+</html>
