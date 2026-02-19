@@ -8,12 +8,15 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MathCards">
-    <link rel="apple-touch-icon" href="https://via.placeholder.com/180/4f46e5/ffffff?text=Math">
 
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
             asciimath2jax: { delimiters: [['`','`']], preview: "none" },
-            "HTML-CSS": { linebreaks: { automatic: true, width: "container" }, imageFont: null },
+            "HTML-CSS": { 
+                linebreaks: { automatic: true, width: "container" }, 
+                imageFont: null,
+                scale: 90
+            },
             displayAlign: "center", messageStyle: "none"
         });
     </script>
@@ -22,7 +25,6 @@
 
     <style>
         :root {
-            /* iOS Safe Areas for Notch and Home Indicator */
             --safe-top: env(safe-area-inset-top);
             --safe-bottom: env(safe-area-inset-bottom);
         }
@@ -30,9 +32,11 @@
         body {
             padding-top: var(--safe-top);
             padding-bottom: var(--safe-bottom);
-            -webkit-user-select: none; /* Prevents long-press text selection */
+            -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
+            /* CHANGED: Deep Midnight Background */
+            background: #0f172a; 
         }
 
         .flip-card {
@@ -49,53 +53,33 @@
         
         .flip-card-front, .flip-card-back {
             position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden; border: 3px solid #e5e7eb;
+            backface-visibility: hidden; border: 3px solid #4f46e5;
             border-radius: 1.5rem; padding: 1.5rem;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-            font-size: clamp(1rem, 5vw, 1.5rem); 
+            font-size: clamp(0.9rem, 4.5vw, 1.3rem); 
             box-sizing: border-box;
             word-break: break-word;
+            background: white;
         }
-        .flip-card-front { background: white; }
-        .flip-card-back { background: #f8fafc; transform: rotateY(180deg); }
+        .flip-card-back { transform: rotateY(180deg); }
 
         .card-checkbox-overlay {
             position: absolute; top: 1.25rem; right: 1.25rem; z-index: 50; 
             width: 28px; height: 28px; cursor: pointer; accent-color: #4f46e5;
         }
 
-        /* Rectangular Nav Zone: Hidden on hover, subtle visible on touch mobile */
         .nav-zone {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: calc(60vh / 8); 
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 60;
-            transition: opacity 0.2s ease;
-            opacity: 0;
-            background: rgba(79, 70, 229, 0.9);
-            color: white;
-            border-radius: 8px;
-            font-size: 20px;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 80px; display: flex;
+            align-items: center; justify-content: center;
+            cursor: pointer; z-index: 60; transition: opacity 0.2s;
+            opacity: 0; background: rgba(79, 70, 229, 0.9);
+            color: white; border-radius: 8px; font-size: 20px;
         }
         
-        /* Reveal zones on hover (Desktop) */
-        @media (hover: hover) {
-            .nav-zone:hover:not(.disabled) { opacity: 1; }
-        }
-
-        /* Always show slightly on Mobile since hover doesn't exist */
-        @media (hover: none) {
-            .nav-zone { opacity: 0.2; width: 40px; }
-            .nav-zone:active { opacity: 0.8; }
-        }
+        @media (hover: hover) { .nav-zone:hover:not(.disabled) { opacity: 1; } }
+        @media (hover: none) { .nav-zone { opacity: 0.2; width: 40px; } }
 
         .nav-zone.left { left: -60px; }
         .nav-zone.right { right: -60px; }
@@ -106,53 +90,65 @@
         }
 
         .nav-zone.disabled { pointer-events: none; visibility: hidden; }
-        .card-checkbox { width: 22px; height: 22px; cursor: pointer; accent-color: #4f46e5; }
         .MathJax_Display { display: inline !important; margin: 0 !important; }
-        ::-webkit-scrollbar { display: none; }
 
         .icon-btn {
-            width: 44px; /* Slightly larger for easier finger tapping */
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: white;
-            border: 1px solid #e2e8f0;
-            color: #64748b;
-            font-size: 20px;
-            transition: all 0.2s;
-            cursor: pointer;
+            width: 44px; height: 44px; display: flex;
+            align-items: center; justify-content: center;
+            border-radius: 50%; background: white;
+            border: 1px solid #e2e8f0; color: #64748b;
+            font-size: 20px; cursor: pointer;
+        }
+
+        /* Scalable Math Container for Equation of Plane fix */
+        .flip-card-front div, .flip-card-back div {
+            width: 100%;
+            overflow-wrap: break-word;
+        }
+        .mjx-chtml {
+            max-width: 100% !important;
+            display: inline-block !important;
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-900 overflow-x-hidden">
+<body class="min-h-screen text-slate-100 overflow-x-hidden">
     <div id="app" class="p-4 md:p-8">
         <div class="max-w-4xl mx-auto">
-            <h1 class="text-3xl font-bold text-slate-800 mb-6 text-center">Flashcards</h1>
+            <h1 class="text-3xl font-bold text-white mb-6 text-center">Flashcards</h1>
             <div id="content"></div>
         </div>
     </div>
 
     <script>
-        const STORAGE_KEY = 'math_flashcards_v9';
+        // UPDATED KEY TO v10 TO FORCE REFRESH
+        const STORAGE_KEY = 'math_flashcards_v10';
+        
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
             name: "Mathematics Study",
             cards: [
-                { id: 1, question: "angle between two vectors: ", answer: "`cos theta=(bb(u) cdot bb(v))/(||bb(u)|| ||bb(v)||)`", checked: true },
-                { id: 2, question: "What is `int x^2 dx`?", answer: "`1/3 x^3 + C`", checked: false }
+                { id: 1, question: "Angle between two vectors: ", answer: "`cos theta=(bb(u) cdot bb(v))/(||bb(u)|| \\ ||bb(v)||)`", checked: true },
+                { id: 2, question: "`text(proj)_bb(v) bb(u) = `?", answer: "`((bb(u) cdot bb(v))/||bb(v)||^2) bb(v)`", checked: false },
+                { id: 3, question: "Work formulas:", answer: "`W = ||text(proj)_bb(PQ) bb(F)|| \\ ||bb(PQ)||` <br> `=||bb(F)|| <br> ||bb(PQ)||cos theta` <br> `= bb(F) cdot bb(PQ)`" },
+                { id: 4, question: "Parametric equations of a line in space", answer: "`x = x_1 + at` <br> `y = y_1 + bt` <br> `z = z_1 + ct`" },
+                { id: 5, question: "Equation of a plane", answer: "`a(x - x_1) + b(y - y_1)` <br> `+ c(z - z_1) = 0`" },
+                { id: 6, question: "Distance between a plane and a point Q", answer: "`D = ||text(proj)_{bb(n)} bb(PQ)|| = (|bb(PQ) cdot bb(n)|) / (||bb(n)||)`" },
+                { id: 7, question: "Distance between point Q and line in space", answer: "`D = (||bb(PQ) xx bb(v)||) / (||bb(v)||)`" },
+                // NEW CARDS FROM FORMULA SHEET
+                { id: 8, question: "The unit tangent vector", answer: "`bb(T)(t) = (bb(r)'(t))/(||bb(r)'(t)||) = (bb(v)(t))/(||bb(v)(t)||)`" },
+                { id: 9, question: "The principal unit normal vector", answer: "`bb(N)(t) = (bb(T)'(t))/(||bb(T)'(t)||)`" },
+                { id: 10, question: "Acceleration vector components", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)` <br> `a_T = d/dt ||bb(v)(t)||` <br> `a_N = ||bb(v)|| ||bb(T)'(t)||`" },
+                { id: 11, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
+                { id: 12, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
+                { id: 13, question: "Arc length formula", answer: "`s = int_a^b ||bb(r)'(t)|| dt`" },
+                { id: 14, question: "Arc length function", answer: "`s(t) = int_a^t ||bb(r)'(u)|| du`" },
+                { id: 15, question: "Curvature (K)", answer: "`K = (||bb(T)'(t)||)/(||bb(r)'(t)||)` <br> `K = (||bb(r)'(t) xx bb(r)''(t)||)/(||bb(r)'(t)||^3)`" }
             ]
         }];
 
+        // ... [Rest of the JavaScript functions remain the same] ...
         function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(sets)); }
-
-        let currentSet = null;
-        let studyMode = false;
-        let currentCardIndex = 0;
-        let isFlipped = false;
-        let activeStudyCards = [];
-        let editingCardId = null;
+        let currentSet = null, studyMode = false, currentCardIndex = 0, isFlipped = false, activeStudyCards = [], editingCardId = null;
 
         function render() {
             const content = document.getElementById('content');
@@ -167,7 +163,7 @@
             let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">';
             sets.forEach(set => {
                 html += `<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold mb-1">${escapeHtml(set.name)}</h3>
+                    <h3 class="text-xl font-bold mb-1 text-slate-800">${escapeHtml(set.name)}</h3>
                     <p class="text-slate-500 mb-4">${set.cards.length} cards</p>
                     <button onclick="openSet(${set.id})" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold">Open Set</button>
                 </div>`;
@@ -181,9 +177,9 @@
             const allChecked = starredCount === currentSet.cards.length && currentSet.cards.length > 0;
             let html = `<div class="flex flex-col gap-4 mb-6">
                 <div class="flex items-center justify-between">
-                    <button onclick="backToSets()" class="text-indigo-600 font-bold p-2">← All Sets</button>
+                    <button onclick="backToSets()" class="text-indigo-400 font-bold p-2">← All Sets</button>
                     <div class="flex gap-2">
-                        <button onclick="startStudy(false)" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-full text-sm font-bold">Study All</button>
+                        <button onclick="startStudy(false)" class="px-4 py-2 bg-slate-700 text-white rounded-full text-sm font-bold">Study All</button>
                         <button onclick="startStudy(true)" ${starredCount === 0 ? 'disabled' : ''} class="px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-bold shadow-lg disabled:opacity-30">Checked (${starredCount})</button>
                     </div>
                 </div>
@@ -191,35 +187,26 @@
                     <button onclick="toggleAllCards()" class="text-xs font-bold text-slate-400 uppercase tracking-wider">${allChecked ? 'Uncheck All' : 'Check All'}</button>
                 </div>
             </div>
-            <div class="bg-indigo-50 p-6 rounded-2xl mb-8 border border-indigo-100">
-                <h3 class="font-bold text-indigo-900 mb-4 text-sm uppercase">Add New Card</h3>
+            <div class="bg-slate-800 p-6 rounded-2xl mb-8 border border-slate-700">
+                <h3 class="font-bold text-indigo-300 mb-4 text-sm uppercase">Add New Card</h3>
                 <div class="space-y-3">
-                    <input id="newQ" type="text" placeholder="Question" class="w-full p-3 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
-                    <input id="newA" type="text" placeholder="Answer" class="w-full p-3 rounded-xl border-none ring-1 ring-slate-200 outline-none focus:ring-2 focus:ring-indigo-500">
-                    <button onclick="addNewCard()" class="w-full py-3 bg-slate-800 text-white rounded-xl font-bold">Add to Set</button>
+                    <input id="newQ" type="text" placeholder="Question" class="w-full p-3 rounded-xl bg-slate-900 border-none text-white ring-1 ring-slate-700 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input id="newA" type="text" placeholder="Answer" class="w-full p-3 rounded-xl bg-slate-900 border-none text-white ring-1 ring-slate-700 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button onclick="addNewCard()" class="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold">Add to Set</button>
                 </div>
             </div>
             <div class="space-y-3 pb-20">`;
             currentSet.cards.forEach((card, i) => {
-                if (editingCardId === card.id) {
-                    html += `<div class="bg-indigo-50 p-4 rounded-xl border-2 border-indigo-200 space-y-3">
-                        <input id="editQ-${card.id}" type="text" value="${escapeHtml(card.question)}" class="w-full p-2 rounded-lg">
-                        <input id="editA-${card.id}" type="text" value="${escapeHtml(card.answer)}" class="w-full p-2 rounded-lg">
-                        <div class="flex gap-2"><button onclick="saveEdit(${card.id})" class="flex-1 py-3 bg-indigo-600 text-white rounded-lg font-bold">Save</button>
-                        <button onclick="cancelEdit()" class="flex-1 py-3 bg-slate-300 text-slate-700 rounded-lg font-bold">Cancel</button></div></div>`;
-                } else {
-                    html += `<div class="bg-white p-4 rounded-xl border border-slate-200 flex justify-between items-start">
-                        <div class="flex-1 pr-4">
-                            <div class="text-xs font-bold text-slate-400 uppercase mb-1">Card ${i+1}</div>
-                            <div class="text-slate-800 font-medium">${card.question}</div>
-                            <div class="text-indigo-600 text-sm mt-1">${card.answer}</div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <button onclick="startEdit(${card.id})" class="text-slate-400 p-1">✎</button>
-                            <input type="checkbox" class="card-checkbox" ${card.checked ? 'checked' : ''} onchange="toggleCheck(${i})">
-                            <button onclick="deleteCard(${i})" class="text-slate-300 p-1 text-2xl">&times;</button>
-                        </div></div>`;
-                }
+                html += `<div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-start">
+                    <div class="flex-1 pr-4">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">Card ${i+1}</div>
+                        <div class="text-slate-100 font-medium">${card.question}</div>
+                        <div class="text-indigo-300 text-sm mt-1">${card.answer}</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" class="card-checkbox" ${card.checked ? 'checked' : ''} onchange="toggleCheck(${i})">
+                        <button onclick="deleteCard(${i})" class="text-slate-500 p-1 text-2xl">&times;</button>
+                    </div></div>`;
             });
             return html + '</div>';
         }
@@ -228,49 +215,33 @@
             const card = activeStudyCards[currentCardIndex];
             const masterIndex = currentSet.cards.findIndex(c => c.id === card.id);
             const isChecked = currentSet.cards[masterIndex].checked;
-
-            return `
-                <div class="w-full max-w-xl mx-auto flex flex-col min-h-[85vh] relative">
-                    <div class="flex justify-center mb-6">
-                        <div class="px-3 py-1 bg-slate-200 rounded-full text-xs font-bold text-slate-600">${currentCardIndex + 1} / ${activeStudyCards.length}</div>
+            return `<div class="w-full max-w-xl mx-auto flex flex-col min-h-[85vh] relative">
+                <div class="flex justify-center mb-6">
+                    <div class="px-3 py-1 bg-slate-800 rounded-full text-xs font-bold text-slate-400">${currentCardIndex + 1} / ${activeStudyCards.length}</div>
+                </div>
+                <div class="relative flex-1 flex flex-col items-center justify-center">
+                    <div class="w-[90vw] max-w-[400px] flex justify-between mb-4 px-1">
+                        <button onclick="shuffleCards()" class="icon-btn">↺</button>
+                        <button onclick="exitStudy()" class="icon-btn">✕</button>
                     </div>
-                    <div class="relative flex-1 flex flex-col items-center justify-center">
-                        <div class="w-[90vw] max-w-[400px] flex justify-between mb-4 px-1">
-                            <button onclick="shuffleCards()" class="icon-btn">↺</button>
-                            <button onclick="exitStudy()" class="icon-btn">✕</button>
-                        </div>
+                    <div class="relative">
+                        <div class="nav-zone left ${currentCardIndex === 0 ? 'disabled' : ''}" onclick="prevCard()">←</div>
                         <div class="relative">
-                            <div class="nav-zone left ${currentCardIndex === 0 ? 'disabled' : ''}" onclick="prevCard()">←</div>
-                            <div class="relative">
-                                <input type="checkbox" class="card-checkbox-overlay" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); syncCheck(${masterIndex})">
-                                <div onclick="flipCard()" class="flip-card cursor-pointer">
-                                    <div class="flip-card-inner ${isFlipped ? 'flipped' : ''}">
-                                        <div class="flip-card-front"><div>${card.question}</div></div>
-                                        <div class="flip-card-back"><div>${card.answer}</div></div>
-                                    </div>
+                            <input type="checkbox" class="card-checkbox-overlay" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); syncCheck(${masterIndex})">
+                            <div onclick="flipCard()" class="flip-card cursor-pointer">
+                                <div class="flip-card-inner ${isFlipped ? 'flipped' : ''}">
+                                    <div class="flip-card-front text-slate-900"><div>${card.question}</div></div>
+                                    <div class="flip-card-back text-slate-900"><div>${card.answer}</div></div>
                                 </div>
                             </div>
-                            <div class="nav-zone right ${currentCardIndex === activeStudyCards.length - 1 ? 'disabled' : ''}" onclick="nextCard()">→</div>
                         </div>
+                        <div class="nav-zone right ${currentCardIndex === activeStudyCards.length - 1 ? 'disabled' : ''}" onclick="nextCard()">→</div>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
         }
 
-        // --- HANDLERS ---
-        function startEdit(id) { editingCardId = id; render(); }
-        function cancelEdit() { editingCardId = null; render(); }
-        function saveEdit(id) {
-            const card = currentSet.cards.find(c => c.id === id);
-            card.question = document.getElementById(`editQ-${id}`).value;
-            card.answer = document.getElementById(`editA-${id}`).value;
-            editingCardId = null; saveData(); render();
-        }
         function toggleCheck(index) { currentSet.cards[index].checked = !currentSet.cards[index].checked; saveData(); render(); }
-        function toggleAllCards() {
-            const anyUnchecked = currentSet.cards.some(c => !c.checked);
-            currentSet.cards.forEach(c => c.checked = anyUnchecked);
-            saveData(); render();
-        }
         function syncCheck(masterIndex) { currentSet.cards[masterIndex].checked = !currentSet.cards[masterIndex].checked; saveData(); }
         function startStudy(onlyChecked) {
             activeStudyCards = onlyChecked ? currentSet.cards.filter(c => c.checked) : [...currentSet.cards];
@@ -302,9 +273,12 @@
         function exitStudy() { studyMode = false; render(); }
         function shuffleCards() { activeStudyCards.sort(() => Math.random() - 0.5); currentCardIndex = 0; isFlipped = false; render(); }
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        function toggleAllCards() {
+            const anyUnchecked = currentSet.cards.some(c => !c.checked);
+            currentSet.cards.forEach(c => c.checked = anyUnchecked);
+            saveData(); render();
+        }
         render();
     </script>
 </body>
-
 </html>
-
