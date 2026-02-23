@@ -121,7 +121,7 @@
 
     <script>
         // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v12';
+        const STORAGE_KEY = 'math_flashcards_v13';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -138,11 +138,12 @@
                 { id: 7, question: "The unit tangent vector", answer: "`bb(T)(t) = (bb(r)'(t))/(||bb(r)'(t)||) = (bb(v)(t))/(||bb(v)(t)||)`" },
                 { id: 8, question: "Arc length formula", answer: "`s = int_a^b ||bb(r)'(t)|| dt`" },
                 { id: 9, question: "Arc length function", answer: "`s(t) = int_a^t ||bb(r)'(u)|| du`" }, 
-                { id: 10, question: "The principal unit normal vector", answer: "`bb(N)(t) = (bb(T)'(t))/(||bb(T)'(t)||)`" },
-                { id: 11, question: "Acceleration in terms of <b>T</b> and <b>N</b>", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)`, <br> where <br> `a_T = d/dt ||bb(v)(t)||` <br> `a_N = ||bb(v)|| \\ ||bb(T)'(t)||`" },
-                { id: 12, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
-                { id: 13, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
-                { id: 14, question: "Curvature (K)", answer: "`K = (||bb(T)'(t)||)/(||bb(r)'(t)||)` <br> `K = (||bb(r)'(t) xx bb(r)''(t)||)/(||bb(r)'(t)||^3)`" }
+                { id: 10, question: "Speed", answer: "`||bb(v)(t)||=(ds)/dt`" },
+                { id: 11, question: "The principal unit normal vector", answer: "`bb(N)(t) = (bb(T)'(t))/(||bb(T)'(t)||)`" },
+                { id: 12, question: "Acceleration in terms of <b>T</b> and <b>N</b>", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)`, <br> where <br> `a_T = d/dt ||bb(v)(t)||` <br> `a_N = ||bb(v)|| \\ ||bb(T)'(t)||`" },
+                { id: 13, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
+                { id: 14, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
+                { id: 15, question: "Curvature (K)", answer: "`K = (||bb(T)'(t)||)/(||bb(r)'(t)||)` <br> `K = (||bb(r)'(t) xx bb(r)''(t)||)/(||bb(r)'(t)||^3)`" }
             ]
         }];
 
