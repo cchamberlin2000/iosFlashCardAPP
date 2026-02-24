@@ -140,11 +140,12 @@
                 { id: 9, question: "Arc length formula", answer: "`s = int_a^b ||bb(r)'(t)|| dt`" },
                 { id: 10, question: "Arc length function", answer: "`s(t) = int_a^t ||bb(r)'(u)|| du`" }, 
                 { id: 11, question: "Speed", answer: "`||bb(v)(t)||=(ds)/dt`" },
-                { id: 12, question: "The principal unit normal vector", answer: "`bb(N)(t) = (bb(T)'(t))/(||bb(T)'(t)||)`" },
-                { id: 13, question: "Acceleration in terms of <b>T</b> and <b>N</b>", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)`, where <br><br> `a_T = d/dt ||bb(v)(t)|| = (d^2s)/dt^2` <br><br> `a_N = ||bb(v)|| \\ ||bb(T)'(t)|| = ((ds)/dt)^2K`" },
-                { id: 14, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
-                { id: 15, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
-                { id: 16, question: "Curvature (K)", answer: "`K = (||bb(T)'(t)||)/(||bb(r)'(t)||)` <br> `K = (||bb(r)'(t) xx bb(r)''(t)||)/(||bb(r)'(t)||^3)`" }
+                { id: 12, question: "Curvature (K)", answer: "`K===||T'(s)||`, <br><br>`K = (||bb(T)'(t)||)/(||bb(r)'(t)||)` <br> `K = (||bb(r)'(t) xx bb(r)''(t)||)/(||bb(r)'(t)||^3)`" }
+                { id: 13, question: "The principal unit normal vector", answer: "`bb(N)(t) = (bb(T)'(t))/(||bb(T)'(t)||)`" },
+                { id: 14, question: "Acceleration in terms of <b>T</b> and <b>N</b>", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)`, where <br><br> `a_T = d/dt ||bb(v)(t)|| = (d^2s)/dt^2` <br><br> `a_N = ||bb(v)|| \\ ||bb(T)'(t)|| = ((ds)/dt)^2K`" },
+                { id: 15, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
+                { id: 16, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
+                
             ]
         }];
 
@@ -284,6 +285,7 @@
     </script>
 </body>
 </html>
+
 
 
 
