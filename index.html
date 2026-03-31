@@ -121,7 +121,7 @@
 
     <script>
         // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v22';
+        const STORAGE_KEY = 'math_flashcards_v23';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -145,17 +145,17 @@
                 { id: 15, question: "Acceleration in terms of <b>T</b> and <b>N</b>", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)`, where <br><br> `a_T = d/dt ||bb(v)(t)|| = (d^2s)/dt^2` <br><br> `a_N = ||bb(v)|| \\ ||bb(T)'(t)|| = ((ds)/dt)^2K`" },
                 { id: 16, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
                 { id: 17, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
-                { id: 28, question: "Epsilon-Delta Definition of Limit (Informal)", answer: "`lim_((x,y)->(a,b)) f(x,y) =L` as long as the distance between `(x,y)` and `(a,b)` is sufficiently small. <br> That is, as long as `f(x,y)` eventually gets closer and closer to `L` as `(x,y)` gets closer and closer to `(a,b)`" },
-                { id: 18, question: "Definition of a continuous function z = f(x,y) at (a,b):", answer: "`lim_((x,y)->(a,b)) f(x,y) = f(a,b)`" },
-                { id: 19, question: "Partial derivatives of <i>f</i> <br>with respect to x and y:", answer: "`f_x=lim_(Delta x->0)(f(x+Delta x,y)-f(x,y))/(Delta x)` <br><br> `f_y=lim_(Delta y->0)(f(x,y+Delta y)-f(x,y))/(Delta y)`" }, // [cite: 39]
-                { id: 20, question: "Clairaut's Mixed Partial Theorem", answer: "`f_(xy)(x,y)=f_(yx)(x,y)` <br> as long as these 2nd partials are <br>continous on an open disk" }, // [cite: 40]
-                { id: 21, question: "Implicit differentiation of F(x,y) = 0 with respect to x:", answer: "`dy/dx=-(F_x(x,y))/(F_y(x,y))`" }, // [cite: 41, 42]
-                { id: 22, question: "Implicit partial differentiation of <br>F(x, y, z) = 0 with respect to x and y:", answer: "`(del z)/(del x)=-(F_x(x,y,z))/(F_z(x,y,z))` <br><br> `(del z)/(del y)=-(F_y(x,y,z))/(F_z(x,y,z))`" }, // [cite: 43, 44]
-                { id: 23, question: "The directional derivative:", answer: "`D_bb(u)f(x,y)=f_x(x,y)u_1+f_y(x,y)u_2` <br><br> where `bb(u)=langle u_1,u_2 rangle` <br><br> is a unit vector" }, // [cite: 45]
-                { id: 24, question: "The gradient:", answer: "`nabla f(x,y)=f_x(x,y)bb(i)+f_y(x,y)bb(j)`" }, // [cite: 48]
-                { id: 25, question: "Equation of a tangent plane:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0`" }, // [cite: 49]
-                { id: 26, question: "The Second Derivative Test <br>(Discriminant formula and classification conditions):", answer: "`d=f_(x x)(a,b)f_(yy)(a,b)-[f_(xy)(a,b)]^2` <br><br> `d>0` and `f_(x x)>0 => text(relative minimum)` <br> `d>0` and `f_(x x)<0 => text(relative maximum)` <br> `d<0 => text(neither)` <br> `d=0 => text(inconclusive)`" },
-                { id: 27, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" }   
+                { id: 18, question: "Epsilon-Delta Definition of Limit (Informal)", answer: "`lim_((x,y)->(a,b)) f(x,y) =L` as long as the distance between `(x,y)` and `(a,b)` is sufficiently small. <br> That is, as long as `f(x,y)` eventually gets closer and closer to `L` as `(x,y)` gets closer and closer to `(a,b)`" },
+                { id: 19, question: "Definition of a continuous function z = f(x,y) at (a,b):", answer: "`lim_((x,y)->(a,b)) f(x,y) = f(a,b)`" },
+                { id: 20, question: "Partial derivatives of <i>f</i> <br>with respect to x and y:", answer: "`f_x=lim_(Delta x->0)(f(x+Delta x,y)-f(x,y))/(Delta x)` <br><br> `f_y=lim_(Delta y->0)(f(x,y+Delta y)-f(x,y))/(Delta y)`" }, // [cite: 39]
+                { id: 21, question: "Clairaut's Mixed Partial Theorem", answer: "`f_(xy)(x,y)=f_(yx)(x,y)` <br> as long as these 2nd partials are <br>continous on an open disk" }, // [cite: 40]
+                { id: 22, question: "Implicit differentiation of F(x,y) = 0 with respect to x:", answer: "`dy/dx=-(F_x(x,y))/(F_y(x,y))`" }, // [cite: 41, 42]
+                { id: 23, question: "Implicit partial differentiation of <br>F(x, y, z) = 0 with respect to x and y:", answer: "`(del z)/(del x)=-(F_x(x,y,z))/(F_z(x,y,z))` <br><br> `(del z)/(del y)=-(F_y(x,y,z))/(F_z(x,y,z))`" }, // [cite: 43, 44]
+                { id: 24, question: "The directional derivative:", answer: "`D_bb(u)f(x,y)=f_x(x,y)u_1+f_y(x,y)u_2` <br><br> where `bb(u)=langle u_1,u_2 rangle` <br><br> is a unit vector" }, // [cite: 45]
+                { id: 25, question: "The gradient:", answer: "`nabla f(x,y)=f_x(x,y)bb(i)+f_y(x,y)bb(j)`" }, // [cite: 48]
+                { id: 26, question: "Equation of a tangent plane:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0`" }, // [cite: 49]
+                { id: 27, question: "The Second Derivative Test <br>(Discriminant formula and classification conditions):", answer: "`d=f_(x x)(a,b)f_(yy)(a,b)-[f_(xy)(a,b)]^2` <br><br> `d>0` and `f_(x x)>0 => text(relative minimum)` <br> `d>0` and `f_(x x)<0 => text(relative maximum)` <br> `d<0 => text(neither)` <br> `d=0 => text(inconclusive)`" },
+                { id: 28, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" }   
             ]
         }];
 
