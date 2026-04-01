@@ -121,7 +121,7 @@
 
     <script>
         // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v25';
+        const STORAGE_KEY = 'math_flashcards_v26';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -157,7 +157,7 @@
                 { id: 27, question: "Implicit partial differentiation of <br>F(x, y, z) = 0 with respect to x and y:", answer: "`(del z)/(del x)=-(F_x(x,y,z))/(F_z(x,y,z))` <br><br> `(del z)/(del y)=-(F_y(x,y,z))/(F_z(x,y,z))`" }, // [cite: 43, 44]
                 { id: 28, question: "The directional derivative:", answer: "`D_bb(u)f(x,y)=f_x(x,y)u_1+f_y(x,y)u_2` <br><br> where `bb(u)=langle u_1,u_2 rangle` <br><br> is a unit vector" }, // [cite: 45]
                 { id: 29, question: "The gradient:", answer: "`nabla f(x,y)=f_x(x,y)bb(i)+f_y(x,y)bb(j)`" }, // [cite: 48]
-                { id: 30, question: "Equation of a tangent plane:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0`" }, // [cite: 49]
+                { id: 30, question: "Equation of a tangent plane to a function, f, at a point:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0` <br><br> where `z=f(x,y)`, `F(x,y,z)=f(x,y)-z`, and `(x_0,y_0,z_0)` is the point of tangency" }, // [cite: 49]
                 { id: 31, question: "The Extreme Value Theorm:", answer: "Suppose `z=f(x,y)` is continous on a closed bounded region, R, in the xy-plane. The `f` takes on both an absolute maximum and an absolute minimum on R." },
                 { id: 32, question: "The Second Derivative Test <br>(Discriminant formula and classification conditions):", answer: "`d=f_(x x)(a,b)f_(yy)(a,b)-[f_(xy)(a,b)]^2` <br><br> `d>0` and `f_(x x)>0 => text(relative minimum)` <br> `d>0` and `f_(x x)<0 => text(relative maximum)` <br> `d<0 => text(neither)` <br> `d=0 => text(inconclusive)`" },
                 { id: 33, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" }   
