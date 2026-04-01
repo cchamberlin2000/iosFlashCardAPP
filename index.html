@@ -121,7 +121,7 @@
 
     <script>
         // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v26';
+        const STORAGE_KEY = 'math_flashcards_v27';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -150,7 +150,7 @@
                 { id: 20, question: "Partial derivatives of <i>f</i> <br>with respect to x and y:", answer: "`f_x=lim_(Delta x->0)(f(x+Delta x,y)-f(x,y))/(Delta x)` <br><br> `f_y=lim_(Delta y->0)(f(x,y+Delta y)-f(x,y))/(Delta y)`" }, // [cite: 39]
                 { id: 21, question: "Clairaut's Mixed Partial Theorem", answer: "`f_(xy)(x,y)=f_(yx)(x,y)` <br> as long as these 2nd partials are <br>continous on an open disk" }, // [cite: 40]
                 { id: 22, question: "Informally, a function is differentiable as long as ___________________", answer: "`dz ~~ Delta z`" },
-                { id: 23, question: "if the first partials of z = f(x,y) are continous then ____________________", answer: "f is differentialbe" },
+                { id: 23, question: "If the first partials of z = f(x,y) are continous then ____________________", answer: "f is differentialbe" },
                 { id: 24, question: "If a function is differentiable, then it is __________________________", answer: "continous" },
                 { id: 25, question: "The Chain Rule when z is a funciton of x and y and x and y are functions of s and t:", answer: "`(partial z)/(partial s) = (partial z)/(partial x) * (partial x)/(partial s) + (partial z)/(partial y) * (partial y)/(partial s)` <br><br> `(partial z)/(partial t) = (partial z)/(partial x) * (partial x)/(partial t) + (partial z)/(partial y) * (partial y)/(partial t)`"},
                 { id: 26, question: "Implicit differentiation of F(x,y) = 0 with respect to x:", answer: "`dy/dx=-(F_x(x,y))/(F_y(x,y))`" }, // [cite: 41, 42]
