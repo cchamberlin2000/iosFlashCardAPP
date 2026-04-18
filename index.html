@@ -121,7 +121,7 @@
 
     <script>
         // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v28';
+        const STORAGE_KEY = 'math_flashcards_v34';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -160,7 +160,20 @@
                 { id: 30, question: "Equation of a tangent plane to a function, f, at a point:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0` <br><br> where `z=f(x,y)`, `F(x,y,z)=f(x,y)-z`, and `(x_0,y_0,z_0)` is the point of tangency" }, // [cite: 49]
                 { id: 31, question: "The Extreme Value Theorm:", answer: "Suppose `z=f(x,y)` is continous on a closed bounded region, R, in the xy-plane. Then `f` takes on both an absolute maximum and an absolute minimum on R." },
                 { id: 32, question: "The Second Derivative Test <br>(Discriminant formula and classification conditions):", answer: "`d=f_(x x)(a,b)f_(yy)(a,b)-[f_(xy)(a,b)]^2` <br><br> `d>0` and `f_(x x)>0 => text(relative minimum)` <br> `d>0` and `f_(x x)<0 => text(relative maximum)` <br> `d<0 => text(neither)` <br> `d=0 => text(inconclusive)`" },
-                { id: 33, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" }   
+                { id: 33, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" },   
+                { id: 34, question: "Double integral formula for a Type I Region (vertically simple):", answer: "`int_a^b int_(g_1(x))^(g_2(x)) f(x,y) dy dx`", checked: false },
+                { id: 35, question: "Double integral formula for a Type II Region (horizontally simple):", answer: "`int_c^d int_(h_1(y))^(h_2(y)) f(x,y) dx dy`", checked: false },
+                { id: 36, question: "Polar coordinate conversions and dA:", answer: "`x = r cos theta` <br> `y = r sin theta` <br> `x^2 + y^2 = r^2` <br>`tan(theta)=y/x` <br> `dA = r dr d theta`", checked: false },
+                { id: 37, question: "Double integral evaluated in polar coordinates:", answer: "`int_(theta_1)^(theta_2) int_(g_1(theta))^(g_2(theta)) f(r cos theta, r sin theta) r dr d theta`", checked: false },
+                { id: 38, question: "Mass (m) of a planar lamina over region R with density function &rho;(x,y):", answer: "`m = int int_R rho(x,y) dA`", checked: false },
+                { id: 39, question: "Center of Mass for a planar lamina:", answer: "`bar(x) = 1/m int int_R xrho(x,y) dA` <br><br> `bar(y) = 1/m int int_R yrho(x,y) dA`", checked: false },
+                { id: 40, question: "Moments of Inertia about the x-axis and y-axis:", answer: "`I_x = int int_R y^2 rho(x,y) dA` <br><br> `I_y = int int_R x^2 rho(x,y) dA`", checked: false },
+                { id: 41, question: "Radii of Gyration:", answer: "`bar bar x = sqrt(I_y / m) = sqrt(1/m int int_R x^2 rho(x,y) dA)` <br><br> `bar bar y = sqrt(I_x / m) = sqrt(1/m int int_R y^2 rho(x,y) dA)`", checked: false}, 
+                { id: 42, question: "Polar Moment of Inertia (about the origin):", answer: "`I_0 = int int_R (x^2+y^2) rho(x,y) dA`<br> `= I_x + I_y`", checked: false },
+                { id: 43, question: "Cylindrical coordinate conversions for x, y, z, and dV:", answer: "`x = r cos theta` <br> `y = r sin theta` <br> `z = z` <br>`tan(theta)=y/x`<br>`dV = r dz dr d theta`", checked: false },
+                { id: 44, question: "Spherical coordinate conversions and dV:", answer: "`x = rho sin phi cos theta` <br> `y = rho sin phi sin theta` <br> `z = rho cos phi` <br> `r=rho sin(phi)`<br> `dV = rho^2 sin phi d rho d phi d theta`", checked: false },
+                { id: 47, question: "The Jacobian for a 2D transformation x = x(u,v) and y = y(u,v):", answer: "`(partial(x,y))/(partial(u,v)) = |[(partial x)/(partial u), (partial y)/(partial u)], [(partial x)/(partial v), (partial y)/(partial v)]|`", checked: false},
+                { id: 46, question: "Change of Variables formula for a double integral using the Jacobian:", answer: "`int int_R f(x,y) dA=`<br> `int int_S f(x(u,v), y(u,v)) |(partial(x,y))/(partial(u,v))| du dv`", checked: false }
             ]
         }];
 
@@ -300,7 +313,6 @@
     </script>
 </body>
 </html>
-
 
 
 
