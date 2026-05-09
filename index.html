@@ -121,7 +121,7 @@
 
     <script>
         // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v48';
+        const STORAGE_KEY = 'math_flashcards_v50';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -195,7 +195,7 @@
                     answer: "`1)` `bb(F)` is conservative (`bb(F) = nabla f`) <br><br> `2)` `int_C bb(F) cdot d bb(r)` is independent of path <br><br> `3)` `int_C bb(F) cdot d bb(r) = 0` for every closed curve C", 
                     checked: false
                 },
-                { id: 53, question: "Green's Theorem (for a positively oriented, simple closed curve C bounding region R):", answer: "`oint_C P dx + Q dy = int int_R ((partial Q)/(partial x) - (partial P)/(partial y)) dA`", checked: false },
+                { id: 53, question: "Green's Theorem (for a positively oriented, simple closed curve C bounding region R):", answer: "`oint_C P dx + Q dy` <br><br> `= int int_R ((partial Q)/(partial x) - (partial P)/(partial y)) dA`", checked: false },
                 { id: 54, question: "Formulas for the Area of a region R using Green's Theorem:", answer: "`A = oint_C x dy = -oint_C y dx` <br><br> `= 1/2 oint_C x dy - y dx`", checked: false },
                 { id: 55, question: "Curl of a vector field <b>F</b> = &lang;P, Q, R&rang;:", answer: "`text(curl) bb(F) = nabla xx bb(F)` <br><br> `= |[bb(i), bb(j), bb(k)], [(partial)/(partial x), (partial)/(partial y), (partial)/(partial z)], [P, Q, R]|`", checked: false },                
                 { 
@@ -204,7 +204,7 @@
                     answer: "<b>2D Field:</b> <br><br> `(partial Q)/(partial x) = (partial P)/(partial y)` <br><br><br> <b>3D Field:</b><br><br> `text(curl) bb(F) = bb(0)` ", 
                     checked: false 
                 },
-                { id: 57, question: "Divergence of a vector field <b>F</b> = &lang;P, Q, R&rang;:", answer: "`text(div) bb(F) = nabla cdot bb(F) = (partial P)/(partial x) + (partial Q)/(partial y) + (partial R)/(partial z)`", checked: false },
+                { id: 57, question: "Divergence of a vector field <b>F</b> = &lang;P, Q, R&rang;:", answer: "`text(div) bb(F) = nabla cdot bb(F)`<br><br> `= (partial P)/(partial x) + (partial Q)/(partial y) + (partial R)/(partial z)`", checked: false },
                 { id: 58, question: "Surface Area for a surface S given by <b>r</b>(u, v):", answer: "`int int_S  dS = int int_D ||bb(r)_u xx bb(r)_v|| \\ dA`", checked: false },
                 { id: 59, question: "Surface Integral of a scalar function, <i>f</i>, over a surface given by z = g(x, y):", answer: "`int int_S f(x,y,z) \\ dS` <br><br> `= int int_R f sqrt(1 + g_x^2 + g_y^2) \\ dA`<br><br> where `f=f(x, y, g(x, y))` on `S`", checked: false },
                 { id: 60, question: "Flux integral of a Vector Field across S given by z = g(x, y) with normal <b>N</b>:", answer: "`int int_S bb(F) cdot bb(N) \\ dS` <br><br> `= int int_R bb(F) cdot (+-grad G) \\ dA` <br><br> where `G(x, y, z) = z - g(x, y)`", checked: false },
