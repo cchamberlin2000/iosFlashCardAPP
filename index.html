@@ -121,7 +121,7 @@
 
     <script>
         // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v34';
+        const STORAGE_KEY = 'math_flashcards_v48';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -131,49 +131,85 @@
                 { id: 2, question: "The projection of <b>u</b> onto <b>v</b>", answer: "`text(proj)_bb(v) bb(u) = ((bb(u) cdot bb(v))/||bb(v)||^2) bb(v)`", checked: false },
                 { id: 3, question: "Work formulas:", answer: "`W = ||text(proj)_bb(PQ) bb(F)|| \\ ||bb(PQ)||` <br><br> `=||bb(F)|| \\ ||bb(PQ)||cos theta` <br><br> `= bb(F) cdot bb(PQ)`" },
                 { id: 4, question: "Magnitude of cross product of <b>u</b> and <b>v</b>:", answer: "`||bb(u) xx bb(v)|| = ||bb(u)|| \\ ||bb(v)|| \\ sin theta`" },
-                { id: 5, question: "Torque vector:", answer: "`bb(D) xx bb(F)`" },
-                { id: 6, question: "Parametric equations of a line in space", answer: "`x = x_0 + at` <br> `y = y_0 + bt` <br> `z = z_0 + ct`" },
-                { id: 7, question: "Equation of a plane", answer: "`a(x - x_0) + b(y - y_0)` <br> `+ c(z - z_0) = 0`" },
-                { id: 8, question: "Distance between a plane and a point Q", answer: "`D = ||text(proj)_{bb(n)} bb(PQ)|| = (|bb(PQ) cdot bb(n)|) / (||bb(n)||)`" },
+                { 
+                    id: 5, 
+                    question: "Area of a parallelogram with adjacent sides <b>u</b> and <b>v</b>, and volume of a parallelepiped with adjacent sides <b>u</b>, <b>v</b>, and <b>w</b>:", 
+                    answer: "`text(Area) = ||bb(u) xx bb(v)||` <br><br> `text(Volume) = |bb(u) cdot (bb(v) xx bb(w))|`", 
+                    checked: false 
+                },
+                { id: 6, question: "Torque vector:", answer: "`bb(D) xx bb(F)`" },
+                { id: 7, question: "Parametric equations of a line in space", answer: "`x = x_0 + at` <br> `y = y_0 + bt` <br> `z = z_0 + ct`" },
+                { id: 8, question: "Equation of a plane", answer: "`a(x - x_0) + b(y - y_0)` <br> `+ c(z - z_0) = 0`" },
+                { id: 9, question: "Distance between a plane and a point Q", answer: "`D = ||text(proj)_{bb(n)} bb(PQ)|| = (|bb(PQ) cdot bb(n)|) / (||bb(n)||)`" },
                           
-                { id: 9, question: "The unit tangent vector", answer: "`bb(T)(t) = (bb(r)'(t))/(||bb(r)'(t)||) = (bb(v)(t))/(||bb(v)(t)||)`" },
-                { id: 10, question: "Arc length formula", answer: "`s = int_a^b ||bb(r)'(t)|| dt`" },
-                { id: 11, question: "Arc length function", answer: "`s(t) = int_a^t ||bb(r)'(u)|| du`" }, 
-                { id: 12, question: "Speed", answer: "`||bb(v)(t)||=(ds)/dt`" },
-                { id: 13, question: "Curvature (K)", answer: "`K ≡ ||T'(s)||` <br><br> `K = (||bb(T)'(t)||)/(||bb(r)'(t)||)` <br><br> `K = (||bb(r)'(t) xx bb(r)''(t)||)/(||bb(r)'(t)||^3)`" },
-                { id: 14, question: "The principal unit normal vector", answer: "`bb(N)(t) = (bb(T)'(t))/(||bb(T)'(t)||)`" },
-                { id: 15, question: "Acceleration in terms of <b>T</b> and <b>N</b>", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)`, where <br><br> `a_T = d/dt ||bb(v)(t)|| = (d^2s)/dt^2` <br><br> `a_N = ||bb(v)|| \\ ||bb(T)'(t)|| = ((ds)/dt)^2K`" },
-                { id: 16, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
-                { id: 17, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
-                { id: 18, question: "Epsilon-Delta Definition of Limit (Informal)", answer: "`lim_((x,y)->(a,b)) f(x,y) =L` as long as the distance between `(x,y)` and `(a,b)` is sufficiently small. <br> That is, as long as `f(x,y)` eventually gets closer and closer to `L` as `(x,y)` gets closer and closer to `(a,b)`" },
-                { id: 19, question: "Definition of a continuous function z = f(x,y) at (a,b):", answer: "`lim_((x,y)->(a,b)) f(x,y) = f(a,b)`" },
-                { id: 20, question: "Partial derivatives of <i>f</i> <br>with respect to x and y:", answer: "`f_x=lim_(Delta x->0)(f(x+Delta x,y)-f(x,y))/(Delta x)` <br><br> `f_y=lim_(Delta y->0)(f(x,y+Delta y)-f(x,y))/(Delta y)`" }, // [cite: 39]
-                { id: 21, question: "Clairaut's Mixed Partial Theorem", answer: "`f_(xy)(x,y)=f_(yx)(x,y)` <br> as long as these 2nd partials are <br>continous on an open disk" }, // [cite: 40]
-                { id: 22, question: "Informally, a function is differentiable as long as ___________________", answer: "`dz ~~ Delta z`" },
-                { id: 23, question: "If the first partials of z = f(x,y) are continous then ____________________", answer: "f is differentialbe" },
-                { id: 24, question: "If a function is differentiable, then it is __________________________", answer: "continous" },
-                { id: 25, question: "The Chain Rule when z is a funciton of x and y and x and y are functions of s and t:", answer: "`(partial z)/(partial s) = (partial z)/(partial x) * (partial x)/(partial s) + (partial z)/(partial y) * (partial y)/(partial s)` <br><br> `(partial z)/(partial t) = (partial z)/(partial x) * (partial x)/(partial t) + (partial z)/(partial y) * (partial y)/(partial t)`"},
-                { id: 26, question: "Implicit differentiation of F(x,y) = 0 with respect to x:", answer: "`dy/dx=-(F_x(x,y))/(F_y(x,y))`" }, // [cite: 41, 42]
-                { id: 27, question: "Implicit partial differentiation of <br>F(x, y, z) = 0 with respect to x and y:", answer: "`(del z)/(del x)=-(F_x(x,y,z))/(F_z(x,y,z))` <br><br> `(del z)/(del y)=-(F_y(x,y,z))/(F_z(x,y,z))`" }, // [cite: 43, 44]
-                { id: 28, question: "The directional derivative:", answer: "`D_bb(u)f(x,y)=f_x(x,y)u_1+f_y(x,y)u_2` <br><br> where `bb(u)=langle u_1,u_2 rangle` <br><br> is a unit vector" }, // [cite: 45]
-                { id: 29, question: "The gradient:", answer: "`nabla f(x,y)=f_x(x,y)bb(i)+f_y(x,y)bb(j)`" }, // [cite: 48]
-                { id: 30, question: "Equation of a tangent plane to a function, f, at a point:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0` <br><br> where `z=f(x,y)`, `F(x,y,z)=f(x,y)-z`, and `(x_0,y_0,z_0)` is the point of tangency" }, // [cite: 49]
-                { id: 31, question: "The Extreme Value Theorm:", answer: "Suppose `z=f(x,y)` is continous on a closed bounded region, R, in the xy-plane. Then `f` takes on both an absolute maximum and an absolute minimum on R." },
-                { id: 32, question: "The Second Derivative Test <br>(Discriminant formula and classification conditions):", answer: "`d=f_(x x)(a,b)f_(yy)(a,b)-[f_(xy)(a,b)]^2` <br><br> `d>0` and `f_(x x)>0 => text(relative minimum)` <br> `d>0` and `f_(x x)<0 => text(relative maximum)` <br> `d<0 => text(neither)` <br> `d=0 => text(inconclusive)`" },
-                { id: 33, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" },   
-                { id: 34, question: "Double integral formula for a Type I Region (vertically simple):", answer: "`int_a^b int_(g_1(x))^(g_2(x)) f(x,y) dy dx`", checked: false },
-                { id: 35, question: "Double integral formula for a Type II Region (horizontally simple):", answer: "`int_c^d int_(h_1(y))^(h_2(y)) f(x,y) dx dy`", checked: false },
-                { id: 36, question: "Polar coordinate conversions and dA:", answer: "`x = r cos theta` <br> `y = r sin theta` <br> `x^2 + y^2 = r^2` <br>`tan(theta)=y/x` <br> `dA = r dr d theta`", checked: false },
-                { id: 37, question: "Double integral evaluated in polar coordinates:", answer: "`int_(theta_1)^(theta_2) int_(g_1(theta))^(g_2(theta)) f(r cos theta, r sin theta) r dr d theta`", checked: false },
-                { id: 38, question: "Mass (m) of a planar lamina over region R with density function &rho;(x,y):", answer: "`m = int int_R rho(x,y) dA`", checked: false },
-                { id: 39, question: "Center of Mass for a planar lamina:", answer: "`bar(x) = 1/m int int_R xrho(x,y) dA` <br><br> `bar(y) = 1/m int int_R yrho(x,y) dA`", checked: false },
-                { id: 40, question: "Moments of Inertia about the x-axis and y-axis:", answer: "`I_x = int int_R y^2 rho(x,y) dA` <br><br> `I_y = int int_R x^2 rho(x,y) dA`", checked: false },
-                { id: 41, question: "Radii of Gyration:", answer: "`bar bar x = sqrt(I_y / m) = sqrt(1/m int int_R x^2 rho(x,y) dA)` <br><br> `bar bar y = sqrt(I_x / m) = sqrt(1/m int int_R y^2 rho(x,y) dA)`", checked: false}, 
-                { id: 42, question: "Polar Moment of Inertia (about the origin):", answer: "`I_0 = int int_R (x^2+y^2) rho(x,y) dA`<br> `= I_x + I_y`", checked: false },
-                { id: 43, question: "Cylindrical coordinate conversions for x, y, z, and dV:", answer: "`x = r cos theta` <br> `y = r sin theta` <br> `z = z` <br>`tan(theta)=y/x`<br>`dV = r dz dr d theta`", checked: false },
-                { id: 44, question: "Spherical coordinate conversions and dV:", answer: "`x = rho sin phi cos theta` <br> `y = rho sin phi sin theta` <br> `z = rho cos phi` <br> `r=rho sin(phi)`<br> `dV = rho^2 sin phi d rho d phi d theta`", checked: false },
-                { id: 47, question: "The Jacobian for a 2D transformation x = x(u,v) and y = y(u,v):", answer: "`(partial(x,y))/(partial(u,v)) = |[(partial x)/(partial u), (partial y)/(partial u)], [(partial x)/(partial v), (partial y)/(partial v)]|`", checked: false},
-                { id: 46, question: "Change of Variables formula for a double integral using the Jacobian:", answer: "`int int_R f(x,y) dA=`<br> `int int_S f(x(u,v), y(u,v)) |(partial(x,y))/(partial(u,v))| du dv`", checked: false }
+                { id: 10, question: "The unit tangent vector", answer: "`bb(T)(t) = (bb(r)'(t))/(||bb(r)'(t)||) = (bb(v)(t))/(||bb(v)(t)||)`" },
+                { id: 11, question: "Arc length formula", answer: "`s = int_a^b ||bb(r)'(t)|| dt`" },
+                { id: 12, question: "Arc length function", answer: "`s(t) = int_a^t ||bb(r)'(u)|| du`" }, 
+                { id: 13, question: "Speed", answer: "`||bb(v)(t)||=(ds)/dt`" },
+                { id: 14, question: "Curvature (K)", answer: "`K ≡ ||T'(s)||` <br><br> `K = (||bb(T)'(t)||)/(||bb(r)'(t)||)` <br><br> `K = (||bb(r)'(t) xx bb(r)''(t)||)/(||bb(r)'(t)||^3)`" },
+                { id: 15, question: "The principal unit normal vector", answer: "`bb(N)(t) = (bb(T)'(t))/(||bb(T)'(t)||)`" },
+                { id: 16, question: "Acceleration in terms of <b>T</b> and <b>N</b>", answer: "`bb(a)(t) = a_T bb(T)(t) + a_N bb(N)(t)`, where <br><br> `a_T = d/dt ||bb(v)(t)|| = (d^2s)/dt^2` <br><br> `a_N = ||bb(v)|| \\ ||bb(T)'(t)|| = ((ds)/dt)^2K`" },
+                { id: 17, question: "Alternative Tangential Acceleration", answer: "`a_T = bb(a) cdot bb(T)`" },
+                { id: 18, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
+                { id: 19, question: "Epsilon-Delta Definition of Limit (Informal)", answer: "`lim_((x,y)->(a,b)) f(x,y) =L` as long as the distance between `(x,y)` and `(a,b)` is sufficiently small. <br> That is, as long as `f(x,y)` eventually gets closer and closer to `L` as `(x,y)` gets closer and closer to `(a,b)`" },
+                { id: 20, question: "Definition of a continuous function z = f(x,y) at (a,b):", answer: "`lim_((x,y)->(a,b)) f(x,y) = f(a,b)`" },
+                { id: 21, question: "Clairaut's Mixed Partial Theorem", answer: "`f_(xy)(x,y)=f_(yx)(x,y)` <br> as long as these 2nd partials are <br>continuous on an open disk" }, // [cite: 40]
+                { 
+                    id: 22, 
+                    question: "The Total Differential of z = f(x, y):", 
+                    answer: "`dz = f_x(x,y)dx + f_y(x,y)dy`", 
+                    checked: false 
+                },
+                { id: 23, question: "Informally, a function is differentiable as long as ___________________", answer: "`dz ~~ Delta z`" },
+                { id: 24, question: "If the first partials of z = f(x,y) are continuous then ____________________", answer: "f is differentiable" },
+                { id: 25, question: "If a function is differentiable, then it is __________________________", answer: "continuous" },
+                { id: 26, question: "The Chain Rule when z is a function of x and y and x and y are functions of s and t:", answer: "`(partial z)/(partial s) = (partial z)/(partial x) * (partial x)/(partial s) + (partial z)/(partial y) * (partial y)/(partial s)` <br><br> `(partial z)/(partial t) = (partial z)/(partial x) * (partial x)/(partial t) + (partial z)/(partial y) * (partial y)/(partial t)`"},
+                { id: 27, question: "Implicit differentiation of F(x,y) = 0 with respect to x:", answer: "`dy/dx=-(F_x(x,y))/(F_y(x,y))`" }, // [cite: 41, 42]
+                { id: 28, question: "Implicit partial differentiation of <br>F(x, y, z) = 0 with respect to x and y:", answer: "`(del z)/(del x)=-(F_x(x,y,z))/(F_z(x,y,z))` <br><br> `(del z)/(del y)=-(F_y(x,y,z))/(F_z(x,y,z))`" }, // [cite: 43, 44]
+                { id: 29, question: "The directional derivative:", answer: "`D_bb(u)f(x,y)=f_x(x,y)u_1+f_y(x,y)u_2` <br><br> where `bb(u)=langle u_1,u_2 rangle` <br><br> is a unit vector" }, // [cite: 45]
+                { id: 30, question: "The gradient:", answer: "`nabla f(x,y)=f_x(x,y)bb(i)+f_y(x,y)bb(j)`" }, // [cite: 48]
+                { id: 31, question: "Equation of a tangent plane to a function, f, at a point:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0` <br><br> where `z=f(x,y)`, `F(x,y,z)=f(x,y)-z`, and `(x_0,y_0,z_0)` is the point of tangency" }, // [cite: 49]
+                { id: 32, question: "The Extreme Value Theorem:", answer: "Suppose `z=f(x,y)` is continuous on a closed bounded region, R, in the xy-plane. Then `f` takes on both an absolute maximum and an absolute minimum on R." },
+                { id: 33, question: "The Second Derivative Test <br>(Discriminant formula and classification conditions):", answer: "`d=f_(x x)(a,b)f_(yy)(a,b)-[f_(xy)(a,b)]^2` <br><br> `d>0` and `f_(x x)>0 => text(relative minimum)` <br> `d>0` and `f_(x x)<0 => text(relative maximum)` <br> `d<0 => text(neither)` <br> `d=0 => text(inconclusive)`" },
+                { id: 34, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" },   
+                { id: 35, question: "Double integral formula for a Type I Region (vertically simple):", answer: "`int_a^b int_(g_1(x))^(g_2(x)) f(x,y) dy dx`", checked: false },
+                { id: 36, question: "Double integral formula for a Type II Region (horizontally simple):", answer: "`int_c^d int_(h_1(y))^(h_2(y)) f(x,y) dx dy`", checked: false },
+                { id: 37, question: "Polar coordinate conversions and dA:", answer: "`x = r cos theta` <br> `y = r sin theta` <br> `x^2 + y^2 = r^2` <br>`tan(theta)=y/x` <br> `dA = r dr d theta`", checked: false },
+                { id: 38, question: "Double integral evaluated in polar coordinates:", answer: "`int_(theta_1)^(theta_2) int_(g_1(theta))^(g_2(theta)) f(r cos theta, r sin theta) r dr d theta`", checked: false },
+                { id: 39, question: "Mass (m) of a planar lamina over region R with density function &rho;(x,y):", answer: "`m = int int_R rho(x,y) dA`", checked: false },
+                { id: 40, question: "Center of Mass for a planar lamina:", answer: "`bar(x) = 1/m int int_R xrho(x,y) dA` <br><br> `bar(y) = 1/m int int_R yrho(x,y) dA`", checked: false },
+                { id: 41, question: "Moments of Inertia about the x-axis and y-axis:", answer: "`I_x = int int_R y^2 rho(x,y) dA` <br><br> `I_y = int int_R x^2 rho(x,y) dA`", checked: false },
+                { id: 42, question: "Radii of Gyration:", answer: "`bar bar x = sqrt(I_y / m) = sqrt(1/m int int_R x^2 rho(x,y) dA)` <br><br> `bar bar y = sqrt(I_x / m) = sqrt(1/m int int_R y^2 rho(x,y) dA)`", checked: false}, 
+                { id: 43, question: "Polar Moment of Inertia (about the origin):", answer: "`I_0 = int int_R (x^2+y^2) rho(x,y) dA`<br> `= I_x + I_y`", checked: false },
+                { id: 44, question: "Cylindrical coordinate conversions for x, y, z, and dV:", answer: "`x = r cos theta` <br> `y = r sin theta` <br> `z = z` <br>`tan(theta)=y/x`<br>`dV = r dz dr d theta`", checked: false },
+                { id: 45, question: "Spherical coordinate conversions and dV:", answer: "`x = rho sin phi cos theta` <br> `y = rho sin phi sin theta` <br> `z = rho cos phi` <br> `r=rho sin(phi)`<br> `dV = rho^2 sin phi d rho d phi d theta`", checked: false },
+                { id: 46, question: "The Jacobian for a 2D transformation x = x(u,v) and y = y(u,v):", answer: "`(partial(x,y))/(partial(u,v)) = |[(partial x)/(partial u), (partial y)/(partial u)], [(partial x)/(partial v), (partial y)/(partial v)]|`", checked: false},
+                { id: 47, question: "Change of Variables formula for a double integral using the Jacobian:", answer: "`int int_R f(x,y) dA=`<br> `int int_S f(x(u,v), y(u,v)) |(partial(x,y))/(partial(u,v))| du dv`", checked: false },
+                { id: 48, question: "Condition for a conservative vector field <b>F</b> with a scalar potential function f:", answer: "`bb(F) = nabla f`", checked: false },
+                { id: 49, question: "Line Integral of a scalar function f(x, y, z) over a smooth curve C parameterized by <b>r</b>(t):", answer: "`int_C f(x, y, z) ds = int_a^b f(bb(r)(t)) ||bb(r)'(t)|| dt`", checked: false },
+                { id: 50, question: "Line integral of a vector field along a curve C parameterized by <b>r</b>(t):", answer: "`int_C bb(F) cdot bb(T) ds = int_C bb(F) cdot d bb(r)` <br><br> `= int_a^b bb(F)(bb(r)(t)) cdot bb(r)'(t) dt`", checked: false },
+                { id: 51, question: "Fundamental Theorem for Line Integrals:", answer: "`int_C nabla f cdot d bb(r) = f(bb(r)(b)) - f(bb(r)(a))`", checked: false },
+                { 
+                    id: 52, 
+                    question: "Suppose <b>F</b> is a vector field with continuous first partial derivatives on an open connected region R, and C is a piecewise smooth curve in R.<br><br>State the 3 equivalent conditions for <b>F</b> in R:", 
+                    answer: "`1)` `bb(F)` is conservative (`bb(F) = nabla f`) <br><br> `2)` `int_C bb(F) cdot d bb(r)` is independent of path <br><br> `3)` `int_C bb(F) cdot d bb(r) = 0` for every closed curve C", 
+                    checked: false
+                },
+                { id: 53, question: "Green's Theorem (for a positively oriented, simple closed curve C bounding region R):", answer: "`oint_C P dx + Q dy = int int_R ((partial Q)/(partial x) - (partial P)/(partial y)) dA`", checked: false },
+                { id: 54, question: "Formulas for the Area of a region R using Green's Theorem:", answer: "`A = oint_C x dy = -oint_C y dx` <br><br> `= 1/2 oint_C x dy - y dx`", checked: false },
+                { id: 55, question: "Curl of a vector field <b>F</b> = &lang;P, Q, R&rang;:", answer: "`text(curl) bb(F) = nabla xx bb(F)` <br><br> `= |[bb(i), bb(j), bb(k)], [(partial)/(partial x), (partial)/(partial y), (partial)/(partial z)], [P, Q, R]|`", checked: false },                
+                { 
+                    id: 56, 
+                    question: "Tests for a Conservative Vector Field (assuming an open, simply-connected region):<br><br>1) 2D Field <b>F</b> = &lang;P, Q&rang;<br><br>2) 3D Field <b>F</b> = &lang;P, Q, R&rang;", 
+                    answer: "<b>2D Field:</b> <br><br> `(partial Q)/(partial x) = (partial P)/(partial y)` <br><br><br> <b>3D Field:</b><br><br> `text(curl) bb(F) = bb(0)` ", 
+                    checked: false 
+                },
+                { id: 57, question: "Divergence of a vector field <b>F</b> = &lang;P, Q, R&rang;:", answer: "`text(div) bb(F) = nabla cdot bb(F) = (partial P)/(partial x) + (partial Q)/(partial y) + (partial R)/(partial z)`", checked: false },
+                { id: 58, question: "Surface Area for a surface S given by <b>r</b>(u, v):", answer: "`int int_S  dS = int int_D ||bb(r)_u xx bb(r)_v|| \\ dA`", checked: false },
+                { id: 59, question: "Surface Integral of a scalar function, <i>f</i>, over a surface given by z = g(x, y):", answer: "`int int_S f(x,y,z) \\ dS` <br><br> `= int int_R f sqrt(1 + g_x^2 + g_y^2) \\ dA`<br><br> where `f=f(x, y, g(x, y))` on `S`", checked: false },
+                { id: 60, question: "Flux integral of a Vector Field across S given by z = g(x, y) with normal <b>N</b>:", answer: "`int int_S bb(F) cdot bb(N) \\ dS` <br><br> `= int int_R bb(F) cdot (+-grad G) \\ dA` <br><br> where `G(x, y, z) = z - g(x, y)`", checked: false },
+                { id: 61, question: "Stokes' Theorem:", answer: "`oint_C bb(F) cdot d bb(r) = int int_S text(curl) bb(F) cdot bb(N) \\ dS`", checked: false },
+                { id: 62, question: "The Divergence Theorem (Gauss's Theorem):", answer: "`int int_S bb(F) cdot bb(N) \\ dS = int int int_E text(div) bb(F) \\ dV`", checked: false }    
             ]
         }];
 
@@ -313,7 +349,6 @@
     </script>
 </body>
 </html>
-
 
 
 
