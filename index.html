@@ -36,6 +36,7 @@
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             background: #0f172a; 
+            overscroll-behavior-y: none; /* Stops the mobile rubber-band/bounce effect */
         }
 
         /* Animation for when the next card scales up to the front (Forward) */
@@ -125,7 +126,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'math_flashcards_v62';
+        const STORAGE_KEY = 'math_flashcards_v63';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -234,9 +235,16 @@
         function render() {
             const content = document.getElementById('content');
             const title = document.querySelector('h1');
-            if (studyMode) { content.innerHTML = renderStudyMode(); title.classList.add('hidden'); }
-            else if (!currentSet) { content.innerHTML = renderSetsList(); title.classList.remove('hidden'); }
-            else { content.innerHTML = renderSetEditor(); title.classList.remove('hidden'); }
+            if (studyMode) { 
+                content.innerHTML = renderStudyMode(); 
+                title.classList.add('hidden'); 
+            } else if (!currentSet) { 
+                content.innerHTML = renderSetsList(); 
+                title.classList.remove('hidden'); 
+            } else { 
+                content.innerHTML = renderSetEditor(); 
+                title.classList.remove('hidden'); 
+            }
             setTimeout(() => { if (window.MathJax) MathJax.Hub.Queue(['Typeset', MathJax.Hub, content]); }, 50);
         }
 
@@ -310,7 +318,7 @@
                     <div class="relative flex items-center justify-center w-full">
                         <div class="nav-zone left ${currentCardIndex === 0 ? 'disabled' : ''}" onclick="triggerSwipeOut('prev')">←</div>
                         
-                        <div class="relative" style="width: 90vw; max-width: 400px; height: 60vh; max-height: 550px; touch-action: pan-y;">
+                        <div class="relative" style="width: 90vw; max-width: 400px; height: 60vh; max-height: 550px; touch-action: none;">
                             
                             ${currentCardIndex < activeStudyCards.length - 1 ? `
                                 <div class="absolute inset-0 z-0" style="transform: scale(0.95) translateY(15px); opacity: 0.5; pointer-events: none;">
@@ -350,8 +358,13 @@
         function startStudy(onlyChecked) {
             activeStudyCards = onlyChecked ? currentSet.cards.filter(c => c.checked) : [...currentSet.cards];
             if (activeStudyCards.length === 0) return;
-            studyMode = true; currentCardIndex = 0; isFlipped = false; navDirection = 'forward'; render();
+            studyMode = true; currentCardIndex = 0; isFlipped = false; navDirection = 'forward'; 
+            
+            // Lock body scrolling completely when studying
+            document.body.style.overflow = 'hidden';
+            render();
         }
+        
         function addNewCard() {
             const q = document.getElementById('newQ').value;
             const a = document.getElementById('newA').value;
@@ -377,8 +390,17 @@
         function prevCard() { if (currentCardIndex > 0) { currentCardIndex--; isFlipped = false; navDirection = 'backward'; render(); } }
         
         function openSet(id) { currentSet = sets.find(s => s.id === id); render(); }
-        function backToSets() { currentSet = null; studyMode = false; render(); }
-        function exitStudy() { studyMode = false; render(); }
+        
+        function backToSets() { 
+            currentSet = null; studyMode = false; 
+            document.body.style.overflow = ''; // Restore normal page scrolling
+            render(); 
+        }
+        function exitStudy() { 
+            studyMode = false; 
+            document.body.style.overflow = ''; // Restore normal page scrolling
+            render(); 
+        }
         function shuffleCards() { activeStudyCards.sort(() => Math.random() - 0.5); currentCardIndex = 0; isFlipped = false; navDirection = 'forward'; render(); }
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
         
@@ -411,35 +433,39 @@
             if (prevCardEl) prevCardEl.style.transition = 'none'; 
         }, { passive: true });
 
+        // Changed to passive: false so we can preventDefault() and stop native mobile scrolling
         document.addEventListener('touchmove', e => {
-            if (!studyMode || !isDragging || !activeCardEl) return;
+            if (!studyMode) return;
+            
+            // Actively block any background scrolling while a user is swiping the card
+            if (isDragging) {
+                e.preventDefault();
+            }
+
+            if (!isDragging || !activeCardEl) return;
             
             let currentX = e.changedTouches[0].screenX;
             let currentY = e.changedTouches[0].screenY;
             let deltaX = currentX - touchstartX;
             let deltaY = currentY - touchstartY;
 
-            // Enforce mostly horizontal dragging
             if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaX) < 15) return;
 
             if (deltaX < 0) { 
-                // Dragging Left -> Next Card (Move active card left)
                 let rotate = deltaX * 0.05; 
                 activeCardEl.style.transform = `translateX(${deltaX}px) rotate(${rotate}deg)`;
-                // Ensure previous card stays hidden
                 if (prevCardEl) prevCardEl.style.transform = `translateX(-150vw) rotate(-15deg)`; 
             } else { 
-                // Dragging Right -> Previous Card (Anchor active card, slide prev card over top)
                 activeCardEl.style.transform = `translateX(0px) rotate(0deg)`; 
                 if (prevCardEl) {
                     let cardWidth = activeCardEl.offsetWidth;
                     let offset = -cardWidth + deltaX;
-                    if (offset > 0) offset = 0; // Cap it so it perfectly covers
-                    let rotate = (offset / cardWidth) * 15; // Smoothly rotate from -15deg to 0deg
+                    if (offset > 0) offset = 0; 
+                    let rotate = (offset / cardWidth) * 15; 
                     prevCardEl.style.transform = `translateX(${offset}px) rotate(${rotate}deg)`;
                 }
             }
-        }, { passive: true });
+        }, { passive: false });
 
         document.addEventListener('touchend', e => {
             if (!studyMode || !isDragging || !activeCardEl) return;
@@ -454,18 +480,15 @@
             if (prevCardEl) prevCardEl.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
 
             if (deltaX < -swipeThreshold && currentCardIndex < activeStudyCards.length - 1) {
-                // Next Card Triggered
                 activeCardEl.style.transform = `translateX(-150vw) rotate(-15deg)`;
                 activeCardEl.style.opacity = '0';
                 setTimeout(() => nextCard(), 300);
             } else if (deltaX > swipeThreshold && currentCardIndex > 0) {
-                // Previous Card Triggered
                 if (prevCardEl) {
                     prevCardEl.style.transform = `translateX(0px) rotate(0deg)`;
                 }
                 setTimeout(() => prevCard(), 300);
             } else {
-                // Snap Back (Did not swipe far enough)
                 activeCardEl.style.transform = `translateX(0px) rotate(0deg)`;
                 if (prevCardEl) {
                     prevCardEl.style.transform = `translateX(-150vw) rotate(-15deg)`;
@@ -473,7 +496,6 @@
             }
         }, { passive: true });
 
-        // Logic for physical arrow buttons matching the touch swipe animations
         function triggerSwipeOut(direction) {
             const activeCard = document.getElementById('active-card');
             const prevCardEl = document.getElementById('prev-card');
@@ -498,5 +520,3 @@
     </script>
 </body>
 </html>
-
-```
