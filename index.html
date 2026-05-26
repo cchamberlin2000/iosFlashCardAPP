@@ -35,15 +35,20 @@
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            /* CHANGED: Deep Midnight Background */
             background: #0f172a; 
+        }
+
+        /* Animation for when the next card scales up to the front (Forward) */
+        @keyframes slideUpToFront {
+            from { transform: scale(0.95) translateY(15px); opacity: 0.5; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .animate-to-front {
+            animation: slideUpToFront 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .flip-card {
             perspective: 1000px;
-            width: 90vw; max-width: 400px;
-            height: 60vh; max-height: 550px;
-            margin: 0 auto;
         }
         .flip-card-inner {
             position: relative; width: 100%; height: 100%;
@@ -120,8 +125,7 @@
     </div>
 
     <script>
-        // UPDATED KEY TO v10 TO FORCE REFRESH
-        const STORAGE_KEY = 'math_flashcards_v59';
+        const STORAGE_KEY = 'math_flashcards_v62';
         
         let sets = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [{
             id: Date.now(),
@@ -153,7 +157,7 @@
                 { id: 18, question: "Alternative Normal Acceleration", answer: "`a_N = bb(a) cdot bb(N) = sqrt(||bb(a)||^2 - a_T^2)`" },
                 { id: 19, question: "Epsilon-Delta Definition of Limit (Informal)", answer: "`lim_((x,y)->(a,b)) f(x,y) =L` as long as the distance between `(x,y)` and `(a,b)` is sufficiently small. <br> That is, as long as `f(x,y)` eventually gets closer and closer to `L` as `(x,y)` gets closer and closer to `(a,b)`" },
                 { id: 20, question: "Definition of a continuous function z = f(x,y) at (a,b):", answer: "`lim_((x,y)->(a,b)) f(x,y) = f(a,b)`" },
-                { id: 21, question: "Clairaut's Mixed Partial Theorem", answer: "`f_(xy)(x,y)=f_(yx)(x,y)` <br> as long as these 2nd partials are <br>continuous on an open disk" }, //
+                { id: 21, question: "Clairaut's Mixed Partial Theorem", answer: "`f_(xy)(x,y)=f_(yx)(x,y)` <br> as long as these 2nd partials are <br>continuous on an open disk" }, 
                 { 
                     id: 22, 
                     question: "The Total Differential of z = f(x, y):", 
@@ -164,11 +168,11 @@
                 { id: 24, question: "If the first partials of z = f(x,y) are continuous then ____________________", answer: "f is differentiable" },
                 { id: 25, question: "If a function is differentiable, then it is __________________________", answer: "continuous" },
                 { id: 26, question: "The Chain Rule when z is a function of x and y and x and y are functions of s and t:", answer: "`(partial z)/(partial s) = (partial z)/(partial x) * (partial x)/(partial s) + (partial z)/(partial y) * (partial y)/(partial s)` <br><br> `(partial z)/(partial t) = (partial z)/(partial x) * (partial x)/(partial t) + (partial z)/(partial y) * (partial y)/(partial t)`"},
-                { id: 27, question: "Implicit differentiation of F(x,y) = 0 with respect to x:", answer: "`dy/dx=-(F_x(x,y))/(F_y(x,y))`" }, //
-                { id: 28, question: "Implicit partial differentiation of <br>F(x, y, z) = 0 with respect to x and y:", answer: "`(del z)/(del x)=-(F_x(x,y,z))/(F_z(x,y,z))` <br><br> `(del z)/(del y)=-(F_y(x,y,z))/(F_z(x,y,z))`" }, //
-                { id: 29, question: "The directional derivative:", answer: "`D_bb(u)f(x,y)=f_x(x,y)u_1+f_y(x,y)u_2` <br><br> where `bb(u)=langle u_1,u_2 rangle` <br><br> is a unit vector" }, //
-                { id: 30, question: "The gradient:", answer: "`nabla f(x,y)=f_x(x,y)bb(i)+f_y(x,y)bb(j)`" }, //
-                { id: 31, question: "Equation of a tangent plane to a function, f, at a point:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0` <br><br> where `z=f(x,y)`, `F(x,y,z)=f(x,y)-z`, and `(x_0,y_0,z_0)` is the point of tangency" }, //
+                { id: 27, question: "Implicit differentiation of F(x,y) = 0 with respect to x:", answer: "`dy/dx=-(F_x(x,y))/(F_y(x,y))`" }, 
+                { id: 28, question: "Implicit partial differentiation of <br>F(x, y, z) = 0 with respect to x and y:", answer: "`(del z)/(del x)=-(F_x(x,y,z))/(F_z(x,y,z))` <br><br> `(del z)/(del y)=-(F_y(x,y,z))/(F_z(x,y,z))`" }, 
+                { id: 29, question: "The directional derivative:", answer: "`D_bb(u)f(x,y)=f_x(x,y)u_1+f_y(x,y)u_2` <br><br> where `bb(u)=langle u_1,u_2 rangle` <br><br> is a unit vector" }, 
+                { id: 30, question: "The gradient:", answer: "`nabla f(x,y)=f_x(x,y)bb(i)+f_y(x,y)bb(j)`" }, 
+                { id: 31, question: "Equation of a tangent plane to a function, f, at a point:", answer: "`F_x(x_0,y_0,z_0)(x-x_0)`<br>`+F_y(x_0,y_0,z_0)(y-y_0)` <br>`+F_z(x_0,y_0,z_0)(z-z_0)=0` <br><br> where `z=f(x,y)`, `F(x,y,z)=f(x,y)-z`, and `(x_0,y_0,z_0)` is the point of tangency" }, 
                 { id: 32, question: "The Extreme Value Theorem:", answer: "Suppose `z=f(x,y)` is continuous on a closed bounded region, R, in the xy-plane. Then `f` takes on both an absolute maximum and an absolute minimum on R." },
                 { id: 33, question: "The Second Derivative Test <br>(Discriminant formula and classification conditions):", answer: "`d=f_(x x)(a,b)f_(yy)(a,b)-[f_(xy)(a,b)]^2` <br><br> `d>0` and `f_(x x)>0 => text(relative minimum)` <br> `d>0` and `f_(x x)<0 => text(relative maximum)` <br> `d<0 => text(neither)` <br> `d=0 => text(inconclusive)`" },
                 { id: 34, question: "Lagrange Multipliers", answer: "One constraint: `nabla f = lambda nabla g` <br> Two constraints: `nabla f = lambda nabla g + mu nabla h`" },   
@@ -186,14 +190,12 @@
                 { id: 46, question: "The Jacobian for a 2D transformation x = x(u,v) and y = y(u,v):", answer: "`(partial(x,y))/(partial(u,v)) = |[(partial x)/(partial u), (partial y)/(partial u)], [(partial x)/(partial v), (partial y)/(partial v)]|`", checked: false},
                 { id: 47, question: "Change of Variables formula for a double integral using the Jacobian:", answer: "`int int_R f(x,y) dA=`<br> `int int_S f(x(u,v), y(u,v)) |(partial(x,y))/(partial(u,v))| du dv`", checked: false },
                 { id: 48, question: "Condition for a vector field <b>F</b> to be convervative", answer: " There is a scalar function, `f`, such that <br><br> `bb(F) = nabla f`", checked: false },
-
                 { 
                     id: 49, 
                     question: "Line Integral with respect to arc length involving a scalar function f(x, y, z) over a smooth curve C parameterized by <b>r</b>(t):", 
                     answer: "`int_C f(x, y, z) ds =` <br><br> <mark>`int_a^b f(x(t), y(t), z(t)) ||bb(r)'(t)|| dt`</mark>", 
                     checked: false 
                 },
-
                 { id: 50, question: "Line integral with respect to a vector field, <b>F</b>, along a smooth curve C parameterized by <b>r</b>(t):", answer: "`int_C bb(F) cdot bb(T) ds = int_C bb(F) cdot d bb(r)` <br><br> <mark>`= int_a^b bb(F) cdot bb(r)'(t) dt`</mark>", checked: false },
                 { id: 51, question: "Fundamental Theorem for Line Integrals:", answer: "`int_C nabla f cdot d bb(r) =` <br><br> <mark>`f(text(end point)) - f(text(start point))`</mark>", checked: false },
                 { 
@@ -220,9 +222,14 @@
             ]
         }];
 
-        // ... [Rest of the JavaScript functions remain the same] ...
         function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(sets)); }
-        let currentSet = null, studyMode = false, currentCardIndex = 0, isFlipped = false, activeStudyCards = [], editingCardId = null;
+        
+        let currentSet = null;
+        let studyMode = false;
+        let currentCardIndex = 0;
+        let isFlipped = false;
+        let activeStudyCards = [];
+        let navDirection = 'forward'; 
 
         function render() {
             const content = document.getElementById('content');
@@ -289,27 +296,49 @@
             const card = activeStudyCards[currentCardIndex];
             const masterIndex = currentSet.cards.findIndex(c => c.id === card.id);
             const isChecked = currentSet.cards[masterIndex].checked;
+            
             return `<div class="w-full max-w-xl mx-auto flex flex-col min-h-[85vh] relative">
                 <div class="flex justify-center mb-6">
                     <div class="px-3 py-1 bg-slate-800 rounded-full text-xs font-bold text-slate-400">${currentCardIndex + 1} / ${activeStudyCards.length}</div>
                 </div>
-                <div class="relative flex-1 flex flex-col items-center justify-center">
+                <div class="relative flex-1 flex flex-col items-center justify-center w-full">
                     <div class="w-[90vw] max-w-[400px] flex justify-between mb-4 px-1">
                         <button onclick="shuffleCards()" class="icon-btn">↺</button>
                         <button onclick="exitStudy()" class="icon-btn">✕</button>
                     </div>
-                    <div class="relative">
-                        <div class="nav-zone left ${currentCardIndex === 0 ? 'disabled' : ''}" onclick="prevCard()">←</div>
-                        <div class="relative">
-                            <input type="checkbox" class="card-checkbox-overlay" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); syncCheck(${masterIndex})">
-                            <div onclick="flipCard()" class="flip-card cursor-pointer">
+                    
+                    <div class="relative flex items-center justify-center w-full">
+                        <div class="nav-zone left ${currentCardIndex === 0 ? 'disabled' : ''}" onclick="triggerSwipeOut('prev')">←</div>
+                        
+                        <div class="relative" style="width: 90vw; max-width: 400px; height: 60vh; max-height: 550px; touch-action: pan-y;">
+                            
+                            ${currentCardIndex < activeStudyCards.length - 1 ? `
+                                <div class="absolute inset-0 z-0" style="transform: scale(0.95) translateY(15px); opacity: 0.5; pointer-events: none;">
+                                    <div class="flip-card-front text-slate-900 shadow-xl" style="position: relative; width: 100%; height: 100%;">
+                                        <div>${activeStudyCards[currentCardIndex + 1].question}</div>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <div id="active-card" class="absolute inset-0 z-10 flip-card ${navDirection === 'forward' ? 'animate-to-front' : ''} cursor-pointer" onclick="flipCard()" style="margin: 0; width: 100%; height: 100%;">
+                                <input type="checkbox" class="card-checkbox-overlay" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); syncCheck(${masterIndex})">
                                 <div class="flip-card-inner ${isFlipped ? 'flipped' : ''}">
-                                    <div class="flip-card-front text-slate-900"><div>${card.question}</div></div>
-                                    <div class="flip-card-back text-slate-900"><div>${card.answer}</div></div>
+                                    <div class="flip-card-front text-slate-900 shadow-xl"><div>${card.question}</div></div>
+                                    <div class="flip-card-back text-slate-900 shadow-xl"><div>${card.answer}</div></div>
                                 </div>
                             </div>
+                            
+                            ${currentCardIndex > 0 ? `
+                                <div id="prev-card" class="absolute inset-0 z-20 pointer-events-none" style="transform: translateX(-150vw) rotate(-15deg);">
+                                    <div class="flip-card-front text-slate-900 shadow-2xl" style="position: relative; width: 100%; height: 100%;">
+                                        <div>${activeStudyCards[currentCardIndex - 1].question}</div>
+                                    </div>
+                                </div>
+                            ` : ''}
+
                         </div>
-                        <div class="nav-zone right ${currentCardIndex === activeStudyCards.length - 1 ? 'disabled' : ''}" onclick="nextCard()">→</div>
+
+                        <div class="nav-zone right ${currentCardIndex === activeStudyCards.length - 1 ? 'disabled' : ''}" onclick="triggerSwipeOut('next')">→</div>
                     </div>
                 </div>
             </div>`;
@@ -317,10 +346,11 @@
 
         function toggleCheck(index) { currentSet.cards[index].checked = !currentSet.cards[index].checked; saveData(); render(); }
         function syncCheck(masterIndex) { currentSet.cards[masterIndex].checked = !currentSet.cards[masterIndex].checked; saveData(); }
+        
         function startStudy(onlyChecked) {
             activeStudyCards = onlyChecked ? currentSet.cards.filter(c => c.checked) : [...currentSet.cards];
             if (activeStudyCards.length === 0) return;
-            studyMode = true; currentCardIndex = 0; isFlipped = false; render();
+            studyMode = true; currentCardIndex = 0; isFlipped = false; navDirection = 'forward'; render();
         }
         function addNewCard() {
             const q = document.getElementById('newQ').value;
@@ -332,7 +362,9 @@
             const name = prompt("Set name:");
             if (name) { sets.push({ id: Date.now(), name: name, cards: [] }); saveData(); render(); }
         }
+        
         function flipCard() {
+            if (typeof swipeDistance !== 'undefined' && swipeDistance > 15) return;
             isFlipped = !isFlipped;
             const inner = document.querySelector('.flip-card-inner');
             if (inner) {
@@ -340,50 +372,131 @@
                 setTimeout(() => { if (window.MathJax) MathJax.Hub.Queue(['Typeset', MathJax.Hub, inner]); }, 100);
             }
         }
-        function nextCard() { if (currentCardIndex < activeStudyCards.length - 1) { currentCardIndex++; isFlipped = false; render(); } }
-        function prevCard() { if (currentCardIndex > 0) { currentCardIndex--; isFlipped = false; render(); } }
+        
+        function nextCard() { if (currentCardIndex < activeStudyCards.length - 1) { currentCardIndex++; isFlipped = false; navDirection = 'forward'; render(); } }
+        function prevCard() { if (currentCardIndex > 0) { currentCardIndex--; isFlipped = false; navDirection = 'backward'; render(); } }
+        
         function openSet(id) { currentSet = sets.find(s => s.id === id); render(); }
         function backToSets() { currentSet = null; studyMode = false; render(); }
         function exitStudy() { studyMode = false; render(); }
-        function shuffleCards() { activeStudyCards.sort(() => Math.random() - 0.5); currentCardIndex = 0; isFlipped = false; render(); }
+        function shuffleCards() { activeStudyCards.sort(() => Math.random() - 0.5); currentCardIndex = 0; isFlipped = false; navDirection = 'forward'; render(); }
         function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+        
         function toggleAllCards() {
             const anyUnchecked = currentSet.cards.some(c => !c.checked);
             currentSet.cards.forEach(c => c.checked = anyUnchecked);
             saveData(); render();
         }
 
-        // --- NEW TOUCH SWIPE LOGIC ---
+        // --- REAL-TIME TOUCH / SWIPE LOGIC ---
         let touchstartX = 0;
-        let touchendX = 0;
+        let touchstartY = 0;
+        let isDragging = false;
+        let activeCardEl = null;
+        let prevCardEl = null;
+        let swipeDistance = 0; 
 
         document.addEventListener('touchstart', e => {
-            // Only capture swipes if we are actively viewing flashcards
-            if (!studyMode) return;
+            if (!studyMode || !e.target.closest('#active-card')) return;
+            
             touchstartX = e.changedTouches[0].screenX;
+            touchstartY = e.changedTouches[0].screenY;
+            isDragging = true;
+            swipeDistance = 0;
+            
+            activeCardEl = document.getElementById('active-card');
+            prevCardEl = document.getElementById('prev-card');
+            
+            if (activeCardEl) activeCardEl.style.transition = 'none'; 
+            if (prevCardEl) prevCardEl.style.transition = 'none'; 
+        }, { passive: true });
+
+        document.addEventListener('touchmove', e => {
+            if (!studyMode || !isDragging || !activeCardEl) return;
+            
+            let currentX = e.changedTouches[0].screenX;
+            let currentY = e.changedTouches[0].screenY;
+            let deltaX = currentX - touchstartX;
+            let deltaY = currentY - touchstartY;
+
+            // Enforce mostly horizontal dragging
+            if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaX) < 15) return;
+
+            if (deltaX < 0) { 
+                // Dragging Left -> Next Card (Move active card left)
+                let rotate = deltaX * 0.05; 
+                activeCardEl.style.transform = `translateX(${deltaX}px) rotate(${rotate}deg)`;
+                // Ensure previous card stays hidden
+                if (prevCardEl) prevCardEl.style.transform = `translateX(-150vw) rotate(-15deg)`; 
+            } else { 
+                // Dragging Right -> Previous Card (Anchor active card, slide prev card over top)
+                activeCardEl.style.transform = `translateX(0px) rotate(0deg)`; 
+                if (prevCardEl) {
+                    let cardWidth = activeCardEl.offsetWidth;
+                    let offset = -cardWidth + deltaX;
+                    if (offset > 0) offset = 0; // Cap it so it perfectly covers
+                    let rotate = (offset / cardWidth) * 15; // Smoothly rotate from -15deg to 0deg
+                    prevCardEl.style.transform = `translateX(${offset}px) rotate(${rotate}deg)`;
+                }
+            }
         }, { passive: true });
 
         document.addEventListener('touchend', e => {
-            if (!studyMode) return;
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipe();
+            if (!studyMode || !isDragging || !activeCardEl) return;
+            isDragging = false;
+            
+            let touchendX = e.changedTouches[0].screenX;
+            let deltaX = touchendX - touchstartX;
+            swipeDistance = Math.abs(deltaX);
+            const swipeThreshold = 80;
+
+            activeCardEl.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+            if (prevCardEl) prevCardEl.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+
+            if (deltaX < -swipeThreshold && currentCardIndex < activeStudyCards.length - 1) {
+                // Next Card Triggered
+                activeCardEl.style.transform = `translateX(-150vw) rotate(-15deg)`;
+                activeCardEl.style.opacity = '0';
+                setTimeout(() => nextCard(), 300);
+            } else if (deltaX > swipeThreshold && currentCardIndex > 0) {
+                // Previous Card Triggered
+                if (prevCardEl) {
+                    prevCardEl.style.transform = `translateX(0px) rotate(0deg)`;
+                }
+                setTimeout(() => prevCard(), 300);
+            } else {
+                // Snap Back (Did not swipe far enough)
+                activeCardEl.style.transform = `translateX(0px) rotate(0deg)`;
+                if (prevCardEl) {
+                    prevCardEl.style.transform = `translateX(-150vw) rotate(-15deg)`;
+                }
+            }
         }, { passive: true });
 
-        function handleSwipe() {
-            const swipeThreshold = 50; // Minimum pixel drag to count as a swipe
+        // Logic for physical arrow buttons matching the touch swipe animations
+        function triggerSwipeOut(direction) {
+            const activeCard = document.getElementById('active-card');
+            const prevCardEl = document.getElementById('prev-card');
             
-            if (touchendX < touchstartX - swipeThreshold) {
-                // Swiped left (finger moved from right to left) -> Go to next card
-                nextCard();
-            }
-            if (touchendX > touchstartX + swipeThreshold) {
-                // Swiped right (finger moved from left to right) -> Go to previous card
-                prevCard();
+            if (direction === 'next') { 
+                if (activeCard && currentCardIndex < activeStudyCards.length - 1) {
+                    activeCard.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                    activeCard.style.transform = 'translateX(-150vw) rotate(-15deg)';
+                    activeCard.style.opacity = '0';
+                    setTimeout(() => nextCard(), 300);
+                }
+            } else if (direction === 'prev') { 
+                if (prevCardEl && currentCardIndex > 0) {
+                    prevCardEl.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                    prevCardEl.style.transform = 'translateX(0px) rotate(0deg)';
+                    setTimeout(() => prevCard(), 300);
+                }
             }
         }
-        // -----------------------------
 
         render();
     </script>
 </body>
 </html>
+
+```
